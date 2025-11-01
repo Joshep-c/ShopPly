@@ -1,4 +1,4 @@
-package com.shopply.appEcommerce
+package com.shopply.appEcommerce.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,12 +36,4 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ShopPly2Theme {
-        Greeting("Android")
-    }
 }
