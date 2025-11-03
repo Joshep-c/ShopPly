@@ -3,6 +3,7 @@ package com.shopply.appEcommerce.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.shopply.appEcommerce.data.local.dao.*
+import com.shopply.appEcommerce.data.preferences.UserPreferences
 import com.shopply.appEcommerce.data.repository.*
 import dagger.Module
 import dagger.Provides
@@ -96,5 +97,16 @@ object RepositoryModule {
             categoryRepository,
             productRepository
         )
+    }
+
+    /**
+     * Provee UserPreferences
+     */
+    @Provides
+    @Singleton
+    fun provideUserPreferences(
+        dataStore: DataStore<Preferences>
+    ): UserPreferences {
+        return UserPreferences(dataStore)
     }
 }

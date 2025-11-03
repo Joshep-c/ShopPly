@@ -2,6 +2,8 @@ package com.shopply.appEcommerce.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,6 +16,8 @@ import com.shopply.appEcommerce.ui.auth.AuthScreen
 import com.shopply.appEcommerce.ui.auth.AuthViewModel
 import com.shopply.appEcommerce.ui.auth.LoginScreen
 import com.shopply.appEcommerce.ui.auth.SignUpScreen
+import com.shopply.appEcommerce.ui.home.HomeScreen
+import com.shopply.appEcommerce.ui.home.HomeViewModel
 
 @Composable
 fun NavGraph(
@@ -86,16 +90,23 @@ fun NavGraph(
             )
         }
 
-        // ========== PANTALLA HOME (Para el futuro) ==========
+        // ========== PANTALLA HOME ==========
         composable(Screen.Home.route) {
-            // HomeScreen(
-            //     modifier = modifier,
-            //     onProductClick = { productId ->
-            //         navController.navigate(
-            //             Screen.ProductDetail.createRoute(productId)
-            //         )
-            //     }
-            // )
+            val viewModel: HomeViewModel = hiltViewModel()
+            val homeIsDarkTheme by viewModel.isDarkTheme.collectAsState()
+
+            HomeScreen(
+                modifier = modifier,
+                viewModel = viewModel,
+                isDarkTheme = homeIsDarkTheme,
+                onLogout = {
+                    // Al hacer logout, navegar a Auth y limpiar el stack
+                    navController.navigate(Screen.Auth.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         // ========== DETALLE DE PRODUCTO (Ejemplo con argumentos) ==========
