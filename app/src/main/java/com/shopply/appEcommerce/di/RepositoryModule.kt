@@ -97,4 +97,27 @@ object RepositoryModule {
             productRepository
         )
     }
+
+    /**
+     * Provee DatabaseInitializer
+     */
+    @Provides
+    @Singleton
+    fun provideDatabaseInitializer(
+        dataSeeder: DataSeeder,
+        userRepository: UserRepository,
+        storeRepository: StoreRepository,
+        categoryRepository: CategoryRepository,
+        productRepository: ProductRepository,
+        cartRepository: CartRepository
+    ): com.shopply.appEcommerce.data.local.database.DatabaseInitializer {
+        return com.shopply.appEcommerce.data.local.database.DatabaseInitializer(
+            dataSeeder,
+            userRepository,
+            storeRepository,
+            categoryRepository,
+            productRepository,
+            cartRepository
+        )
+    }
 }

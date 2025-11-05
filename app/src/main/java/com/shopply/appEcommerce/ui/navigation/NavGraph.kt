@@ -14,6 +14,8 @@ import com.shopply.appEcommerce.ui.auth.AuthScreen
 import com.shopply.appEcommerce.ui.auth.AuthViewModel
 import com.shopply.appEcommerce.ui.auth.LoginScreen
 import com.shopply.appEcommerce.ui.auth.SignUpScreen
+import com.shopply.appEcommerce.ui.home.HomeScreen
+import com.shopply.appEcommerce.ui.home.HomeViewModel
 
 @Composable
 fun NavGraph(
@@ -86,16 +88,22 @@ fun NavGraph(
             )
         }
 
-        // ========== PANTALLA HOME (Para el futuro) ==========
+        // ========== PANTALLA HOME ==========
         composable(Screen.Home.route) {
-            // HomeScreen(
-            //     modifier = modifier,
-            //     onProductClick = { productId ->
-            //         navController.navigate(
-            //             Screen.ProductDetail.createRoute(productId)
-            //         )
-            //     }
-            // )
+            val viewModel: HomeViewModel = hiltViewModel()
+
+            HomeScreen(
+                modifier = modifier,
+                viewModel = viewModel,
+                onLogout = {
+                    navController.navigate(Screen.Auth.route) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
         // ========== DETALLE DE PRODUCTO (Ejemplo con argumentos) ==========

@@ -93,32 +93,42 @@ class DataSeeder @Inject constructor(
      */
     private suspend fun createTestStores() {
         // Tienda 1 - Tech Arequipa (APROBADA)
-        val techStore = Store(
-            ownerId = 2, // Juan Pérez
-            name = "Tech Arequipa",
-            description = "Tecnología y electrónica de última generación para todo el Perú",
-            ruc = "20123456789",
-            phone = "987111222",
-            status = StoreStatus.APPROVED,
-            rating = 4.5f,
-            createdAt = System.currentTimeMillis(),
-            approvedAt = System.currentTimeMillis()
+        val techStoreResult = storeRepository.createStore(
+            Store(
+                ownerId = 2, // Juan Pérez
+                name = "Tech Arequipa",
+                description = "Tecnología y electrónica de última generación para todo el Perú",
+                ruc = "20123456789",
+                phone = "987111222",
+                status = StoreStatus.PENDING, // Se crea como pending
+                rating = 4.5f,
+                createdAt = System.currentTimeMillis()
+            )
         )
-        storeRepository.createStore(techStore)
+
+        // Aprobar la tienda inmediatamente (simular aprobación del admin)
+        if (techStoreResult is com.shopply.appEcommerce.domain.model.Result.Success) {
+            storeRepository.approveStore(techStoreResult.data)
+        }
 
         // Tienda 2 - Artesanía Cusco (APROBADA)
-        val artStore = Store(
-            ownerId = 3, // María Rodriguez
-            name = "Artesanía Cusqueña",
-            description = "Productos artesanales 100% peruanos, hechos a mano en Cusco",
-            ruc = "20987654321",
-            phone = "987333444",
-            status = StoreStatus.APPROVED,
-            rating = 4.8f,
-            createdAt = System.currentTimeMillis(),
-            approvedAt = System.currentTimeMillis()
+        val artStoreResult = storeRepository.createStore(
+            Store(
+                ownerId = 3, // María Rodriguez
+                name = "Artesanía Cusqueña",
+                description = "Productos artesanales 100% peruanos, hechos a mano en Cusco",
+                ruc = "20987654321",
+                phone = "987333444",
+                status = StoreStatus.PENDING,
+                rating = 4.8f,
+                createdAt = System.currentTimeMillis()
+            )
         )
-        storeRepository.createStore(artStore)
+
+        // Aprobar la tienda inmediatamente
+        if (artStoreResult is com.shopply.appEcommerce.domain.model.Result.Success) {
+            storeRepository.approveStore(artStoreResult.data)
+        }
     }
 
     /**
