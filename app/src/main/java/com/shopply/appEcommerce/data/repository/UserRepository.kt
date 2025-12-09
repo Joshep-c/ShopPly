@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import com.shopply.appEcommerce.data.local.dao.UserDao
 import com.shopply.appEcommerce.data.local.entities.User
 import com.shopply.appEcommerce.data.local.entities.UserRole
+import com.shopply.appEcommerce.data.security.PasswordHasher
 import com.shopply.appEcommerce.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -18,15 +19,21 @@ import javax.inject.Singleton
  // UserRepository - Repositorio de usuarios
  
  // Gestiona: 
- // - Autenticación (login/registro)
+ // - Autenticación (login/registro) con contraseñas hasheadas
  // - Sesión de usuario (DataStore)
  // - CRUD de usuarios
  // - Gestión de roles y permisos
- 
+ //
+ // SEGURIDAD:
+ // - Contraseñas hasheadas con BCrypt
+ // - Validación de fortaleza de contraseña
+ // - Protección contra timing attacks
+
 @Singleton
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val passwordHasher: PasswordHasher
 ) {
     companion object {
         private val CURRENT_USER_ID = longPreferencesKey("current_user_id")
@@ -55,10 +62,15 @@ class UserRepository @Inject constructor(
     }
 
     // AUTENTICACIÓN
-
-    // Login de usuario
-    // Valida credenciales y guarda sesión
-    
+    /**
+     * Login de usuario
+     * Valida credenciales usando BCrypt y guarda sesión
+     *
+     * SEGURIDAD:
+     * - Verifica hash con BCrypt (protección contra timing attacks)
+     * - Verifica si el usuario está baneado
+     * - Actualiza timestamp de último login
+     */
     suspend fun login(email: String, password: String): Result<User> {
         return try {
             val user = userDao.getUserByEmail(email)
@@ -70,13 +82,22 @@ class UserRepository @Inject constructor(
                 user.isBanned -> {
                     Result.Error(Exception("Tu cuenta ha sido suspendida: ${user.banReason}"))
                 }
-                user.passwordHash != password -> {
+                !passwordHasher.verifyPassword(password, user.passwordHash) -> {
+                    // BCrypt hace comparación de tiempo constante
                     Result.Error(Exception("Contraseña incorrecta"))
                 }
                 else -> {
-                    // Guardar sesión
+                    // Login exitoso: guardar sesión
                     dataStore.edit { it[CURRENT_USER_ID] = user.id }
                     userDao.updateLastLogin(user.id)
+
+                    // Verificar si el hash necesita actualización
+                    if (passwordHasher.needsRehash(user.passwordHash)) {
+                        // Rehashear con el nuevo factor de costo
+                        val newHash = passwordHasher.hashPassword(password)
+                        userDao.updateUser(user.copy(passwordHash = newHash))
+                    }
+
                     Result.Success(user)
                 }
             }
@@ -84,9 +105,15 @@ class UserRepository @Inject constructor(
             Result.Error(e)
         }
     }
-
-    
-    // Registro de nuevo usuario
+    /**
+     * Registro de nuevo usuario
+     *
+     * SEGURIDAD:
+     * - Valida fortaleza de contraseña
+     * - Hashea contraseña con BCrypt antes de guardar
+     * - Verifica que el email no esté duplicado
+     * - Auto-login después de registro exitoso
+     */
     suspend fun register(
         email: String,
         name: String,
@@ -95,14 +122,24 @@ class UserRepository @Inject constructor(
         userRole: UserRole = UserRole.BUYER
     ): Result<User> {
         return try {
-            // Verificar si el email ya existe
+            // 1. Validar fortaleza de contraseña
+            val (isValid, errorMessage) = passwordHasher.validatePasswordStrength(password)
+            if (!isValid) {
+                return Result.Error(Exception(errorMessage ?: "Contraseña inválida"))
+            }
+
+            // 2. Verificar si el email ya existe
             if (userDao.getUserByEmail(email) != null) {
                 return Result.Error(Exception("El email ya está registrado"))
             }
 
+            // 3. Hashear la contraseña con BCrypt
+            val passwordHash = passwordHasher.hashPassword(password)
+
+            // 4. Crear usuario con contraseña hasheada
             val user = User(
                 email = email,
-                passwordHash = password,
+                passwordHash = passwordHash,  // ✅ Hash, NO texto plano
                 name = name,
                 phone = phone,
                 userRole = userRole
@@ -111,7 +148,7 @@ class UserRepository @Inject constructor(
             val userId = userDao.insertUser(user)
             val newUser = user.copy(id = userId)
 
-            // Auto-login
+            // 5. Auto-login
             dataStore.edit { it[CURRENT_USER_ID] = userId }
 
             Result.Success(newUser)

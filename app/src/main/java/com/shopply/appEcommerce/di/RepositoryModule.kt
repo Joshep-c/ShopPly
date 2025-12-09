@@ -13,6 +13,7 @@ import com.shopply.appEcommerce.data.repository.DataSeeder
 import com.shopply.appEcommerce.data.repository.ProductRepository
 import com.shopply.appEcommerce.data.repository.StoreRepository
 import com.shopply.appEcommerce.data.repository.UserRepository
+import com.shopply.appEcommerce.data.security.PasswordHasher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,9 +38,10 @@ object RepositoryModule {
     @Singleton
     fun provideUserRepository(
         userDao: UserDao,
-        dataStore: DataStore<Preferences>
+        dataStore: DataStore<Preferences>,
+        passwordHasher: PasswordHasher
     ): UserRepository {
-        return UserRepository(userDao, dataStore)
+        return UserRepository(userDao, dataStore, passwordHasher)
     }
 
     /**

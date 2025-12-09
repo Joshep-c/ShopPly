@@ -123,7 +123,10 @@ fun HomeScreen(
             is HomeUiState.Success -> {
                 HomeContent(
                     modifier = modifier.padding(paddingValues),
-                    user = state.user
+                    user = state.user,
+                    categories = state.categories,
+                    recommendedProducts = state.recommendedProducts,
+                    specialOffers = state.specialOffers
                 )
             }
             is HomeUiState.Error -> {
@@ -155,7 +158,10 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     modifier: Modifier = Modifier,
-    user: com.shopply.appEcommerce.data.local.entities.User
+    user: com.shopply.appEcommerce.data.local.entities.User,
+    categories: List<com.shopply.appEcommerce.data.local.entities.Category>,
+    recommendedProducts: List<com.shopply.appEcommerce.data.local.entities.Product>,
+    specialOffers: List<com.shopply.appEcommerce.data.local.entities.Product>
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -171,19 +177,19 @@ private fun HomeContent(
             PromotionalBanners()
         }
 
-        // Categorías
+        // Categorías reales de la BD
         item {
-            CategoriesSection()
+            CategoriesSection(categories = categories)
         }
 
-        // Productos recomendados
+        // Productos recomendados reales
         item {
-            RecommendedProducts()
+            RecommendedProducts(products = recommendedProducts)
         }
 
-        // Ofertas especiales
+        // Ofertas especiales reales
         item {
-            SpecialOffers()
+            SpecialOffers(products = specialOffers)
         }
     }
 }
@@ -302,7 +308,7 @@ private fun PromotionalBanner(index: Int) {
 }
 
 @Composable
-private fun CategoriesSection() {
+private fun CategoriesSection(categories: List<com.shopply.appEcommerce.data.local.entities.Category>) {
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
         Text(
             text = "Categorías",
@@ -315,21 +321,26 @@ private fun CategoriesSection() {
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(listOf(
-                "Electrónica" to Icons.Default.Phone,
-                "Ropa" to Icons.Default.ShoppingBag,
-                "Hogar" to Icons.Default.Home,
-                "Deportes" to Icons.Default.Star,
-                "Libros" to Icons.Default.Favorite
-            )) { (category, icon) ->
-                CategoryItem(name = category, icon = icon)
+            items(categories) { category ->
+                CategoryItem(category = category)
             }
         }
     }
 }
 
 @Composable
-private fun CategoryItem(name: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
+private fun CategoryItem(category: com.shopply.appEcommerce.data.local.entities.Category) {
+    // Iconos según el nombre de la categoría
+    val icon = when {
+        category.name.contains("Electrónica", ignoreCase = true) -> Icons.Default.Phone
+        category.name.contains("Ropa", ignoreCase = true) ||
+        category.name.contains("Moda", ignoreCase = true) -> Icons.Default.ShoppingBag
+        category.name.contains("Hogar", ignoreCase = true) -> Icons.Default.Home
+        category.name.contains("Deporte", ignoreCase = true) -> Icons.Default.Star
+        category.name.contains("Artesanía", ignoreCase = true) -> Icons.Default.Favorite
+        else -> Icons.Default.ShoppingBag
+    }
+
     Card(
         modifier = Modifier
             .width(100.dp)
@@ -346,17 +357,17 @@ private fun CategoryItem(name: String, icon: androidx.compose.ui.graphics.vector
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = name,
+                contentDescription = category.name,
                 modifier = Modifier.size(40.dp),
                 tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = name,
+                text = category.name,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -364,7 +375,9 @@ private fun CategoryItem(name: String, icon: androidx.compose.ui.graphics.vector
 }
 
 @Composable
-private fun RecommendedProducts() {
+private fun RecommendedProducts(products: List<com.shopply.appEcommerce.data.local.entities.Product>) {
+    if (products.isEmpty()) return
+
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
         Row(
             modifier = Modifier
@@ -387,15 +400,17 @@ private fun RecommendedProducts() {
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(5) { index ->
-                ProductCard(index)
+            items(products) { product ->
+                ProductCard(product = product, isOffer = false)
             }
         }
     }
 }
 
 @Composable
-private fun SpecialOffers() {
+private fun SpecialOffers(products: List<com.shopply.appEcommerce.data.local.entities.Product>) {
+    if (products.isEmpty()) return
+
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
         Row(
             modifier = Modifier
@@ -418,15 +433,15 @@ private fun SpecialOffers() {
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(5) { index ->
-                ProductCard(index, isOffer = true)
+            items(products) { product ->
+                ProductCard(product = product, isOffer = true)
             }
         }
     }
 }
 
 @Composable
-private fun ProductCard(index: Int, isOffer: Boolean = false) {
+private fun ProductCard(product: com.shopply.appEcommerce.data.local.entities.Product, isOffer: Boolean = false) {
     Card(
         modifier = Modifier
             .width(160.dp)
@@ -459,7 +474,7 @@ private fun ProductCard(index: Int, isOffer: Boolean = false) {
                         )
                     ) {
                         Text(
-                            text = "-${(index + 1) * 10}%",
+                            text = "-15%",
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
@@ -471,7 +486,7 @@ private fun ProductCard(index: Int, isOffer: Boolean = false) {
 
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
-                    text = "Producto ${index + 1}",
+                    text = product.name,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 2,
@@ -482,14 +497,14 @@ private fun ProductCard(index: Int, isOffer: Boolean = false) {
                 if (isOffer) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "S/ ${(index + 1) * 50}",
+                            text = "S/ ${String.format("%.2f", product.price)}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "S/ ${(index + 1) * 40}",
+                            text = "S/ ${String.format("%.2f", product.price * 0.85)}",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -497,7 +512,7 @@ private fun ProductCard(index: Int, isOffer: Boolean = false) {
                     }
                 } else {
                     Text(
-                        text = "S/ ${(index + 1) * 50}.00",
+                        text = "S/ ${String.format("%.2f", product.price)}",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -517,12 +532,12 @@ private fun ProductCard(index: Int, isOffer: Boolean = false) {
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "4.${5 + index}",
+                        text = "4.5",
                         style = MaterialTheme.typography.bodySmall
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "(${(index + 1) * 10})",
+                        text = "(${product.stock})",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

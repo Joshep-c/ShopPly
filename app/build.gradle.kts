@@ -80,6 +80,9 @@ dependencies {
     // Google Play Services
     implementation(libs.play.services.auth)
 
+    // Security - BCrypt para hashing de contraseñas
+    implementation("org.mindrot:jbcrypt:0.4")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
