@@ -1,3 +1,17 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+
+# GitHub Copilot files
+copilotDiffState.xml
+copilot.data.migration.agent.xml
+copilot.data.migration.ask.xml
+copilot.data.migration.ask2agent.xml
+copilot.data.migration.edit.xml
+copilot*.xml
+
+# IDE specific files
+tasks.xml
+usage.statistics.xml
+dictionaries/
+caches/
