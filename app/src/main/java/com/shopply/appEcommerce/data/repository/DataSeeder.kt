@@ -1,12 +1,14 @@
 package com.shopply.appEcommerce.data.repository
 
-import com.shopply.appEcommerce.data.local.entities.*
+import com.shopply.appEcommerce.data.local.entities.Product
+import com.shopply.appEcommerce.data.local.entities.Store
+import com.shopply.appEcommerce.data.local.entities.StoreStatus
+import com.shopply.appEcommerce.data.local.entities.UserRole
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * DataSeeder - Poblador de datos iniciales
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/repository/DataSeeder.kt
  *
  * Inserta datos de prueba para el prototipo:
  * - 1 Admin
@@ -25,7 +27,7 @@ class DataSeeder @Inject constructor(
 
     /**
      * Poblar base de datos con datos iniciales
-     * Solo se ejecuta si la BD está vacía
+     * Solo si la BD está vacía
      */
     suspend fun seedInitialData() {
         // Verificar si ya hay datos
@@ -111,12 +113,12 @@ class DataSeeder @Inject constructor(
             storeRepository.approveStore(techStoreResult.data)
         }
 
-        // Tienda 2 - Artesanía Cusco (APROBADA)
+        // Tienda 2 - Artesanía Arequipa (APROBADA)
         val artStoreResult = storeRepository.createStore(
             Store(
                 ownerId = 3, // María Rodriguez
-                name = "Artesanía Cusqueña",
-                description = "Productos artesanales 100% peruanos, hechos a mano en Cusco",
+                name = "Artesanía Arequipeña",
+                description = "Productos artesanales 100% peruanos, hechos a mano en Arequipa",
                 ruc = "20987654321",
                 phone = "987333444",
                 status = StoreStatus.PENDING,
@@ -182,12 +184,12 @@ class DataSeeder @Inject constructor(
                 isActive = true
             ),
 
-            // PRODUCTOS DE ARTESANÍA CUSQUEÑA (storeId = 2)
+            // PRODUCTOS DE ARTESANÍA AREQUIPEÑA (storeId = 2)
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
-                name = "Chompa de Alpaca Natural",
-                description = "Chompa tejida a mano con lana de alpaca 100% natural. " +
+                name = "Chompa de Vicuña Natural",
+                description = "Chompa tejida a mano con lana de vicuña 100% natural. " +
                         "Diseños tradicionales andinos, suave y abrigadora. Tallas disponibles: S, M, L, XL.",
                 price = 250.00,
                 stock = 12,
@@ -197,8 +199,8 @@ class DataSeeder @Inject constructor(
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
-                name = "Chullo Cusqueño Tradicional",
-                description = "Gorro tradicional peruano tejido a mano con diseños geométricos andinos. " +
+                name = "Sombrero Arequipeño Tradicional",
+                description = "Sombrero tradicional peruano tejido fibras vegetales. " +
                         "Lana de oveja y alpaca, colores vivos, orejeras incluidas.",
                 price = 45.00,
                 stock = 50,
@@ -208,8 +210,8 @@ class DataSeeder @Inject constructor(
             Product(
                 storeId = 2,
                 categoryId = 4, // Alimentos
-                name = "Café Orgánico de Altura 500g",
-                description = "Café premium del Valle de La Convención - Cusco. " +
+                name = "Café Orgánico de Valenzuela 500g",
+                description = "Café premium de selección nacional elaborado en Arequipa" +
                         "Grano selecto, tueste medio, cultivo orgánico, notas achocolatadas y frutales.",
                 price = 38.00,
                 stock = 100,
@@ -219,8 +221,8 @@ class DataSeeder @Inject constructor(
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
-                name = "Manta Andina Multicolor",
-                description = "Manta tejida con diseños tradicionales incas, 100% lana de alpaca. " +
+                name = "Poncho Andinno Multicolor",
+                description = "Poncho tejida con diseños tradicionales, 100% lana de vicuña. " +
                         "Medidas: 1.5m x 2m. Perfecta para decoración o abrigo. Hecha en telar tradicional.",
                 price = 180.00,
                 stock = 8,
@@ -238,7 +240,6 @@ class DataSeeder @Inject constructor(
      * Limpiar todos los datos (útil para testing)
      */
     suspend fun clearAllData() {
-        // Nota: En el MVP no implementamos esta funcionalidad
         // Se puede agregar después si es necesario
     }
 }

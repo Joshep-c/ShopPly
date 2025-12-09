@@ -10,24 +10,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.shopply.appEcommerce.data.repository.UserRepository
 import com.shopply.appEcommerce.ui.auth.AuthScreen
 import com.shopply.appEcommerce.ui.auth.AuthViewModel
 import com.shopply.appEcommerce.ui.auth.LoginScreen
 import com.shopply.appEcommerce.ui.auth.SignUpScreen
-import com.shopply.appEcommerce.ui.home.HomeScreen
-import com.shopply.appEcommerce.ui.home.HomeViewModel
+import com.shopply.appEcommerce.ui.main.MainScreen
 
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screen.Auth.route
+    startDestination: String = Screen.Auth.route,
+    userRepository: UserRepository? = null
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
+        // PANTALLAS DE AUTENTICACIÓN
         composable(Screen.Auth.route) {
             AuthScreen(
                 modifier = modifier,
@@ -88,25 +90,25 @@ fun NavGraph(
             )
         }
 
-        // ========== PANTALLA HOME ==========
+        // PANTALLA PRINCIPAL CON NAVEGACIÓN INFERIOR
         composable(Screen.Home.route) {
-            val viewModel: HomeViewModel = hiltViewModel()
-
-            HomeScreen(
-                modifier = modifier,
-                viewModel = viewModel,
-                onLogout = {
-                    navController.navigate(Screen.Auth.route) {
-                        popUpTo(0) {
-                            inclusive = true
+            if (userRepository != null) {
+                MainScreen(
+                    modifier = modifier,
+                    userRepository = userRepository,
+                    onLogout = {
+                        navController.navigate(Screen.Auth.route) {
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
                     }
-                }
-            )
+                )
+            }
         }
 
-        // ========== DETALLE DE PRODUCTO (Ejemplo con argumentos) ==========
+        // DETALLE DE PRODUCTO
         composable(
             route = Screen.ProductDetail.route,
             arguments = listOf(

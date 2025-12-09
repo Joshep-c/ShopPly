@@ -1,24 +1,25 @@
 package com.shopply.appEcommerce.data.local.database
 
 import android.util.Log
-import com.shopply.appEcommerce.data.repository.*
-import kotlinx.coroutines.CoroutineScope
+import com.shopply.appEcommerce.data.repository.CartRepository
+import com.shopply.appEcommerce.data.repository.CategoryRepository
+import com.shopply.appEcommerce.data.repository.DataSeeder
+import com.shopply.appEcommerce.data.repository.ProductRepository
+import com.shopply.appEcommerce.data.repository.StoreRepository
+import com.shopply.appEcommerce.data.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * DatabaseInitializer - Inicializador y verificador de base de datos
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/local/database/DatabaseInitializer.kt
- *
- * Funciones:
- * - Poblar datos iniciales
- * - Verificar integridad de la BD
- * - Logging para debugging
- */
+// DatabaseInitializer - Inicializador y verificador de base de datos
+
+// Funciones:
+// - Poblar datos iniciales
+// - Verificar integridad de la BD
+// - Logging para debugging
+
 @Singleton
 class DatabaseInitializer @Inject constructor(
     private val dataSeeder: DataSeeder,
@@ -30,14 +31,13 @@ class DatabaseInitializer @Inject constructor(
 ) {
     private val TAG = "DatabaseInitializer"
 
-    /**
-     * Inicializar base de datos con datos de prueba
-     * Se ejecuta automáticamente al iniciar la app
-     */
+    // Inicializar base de datos con datos de prueba
+    // Se ejecuta automáticamente al iniciar la app
+
     suspend fun initialize() {
         withContext(Dispatchers.IO) {
             try {
-                Log.d(TAG, "🔵 Iniciando inicialización de base de datos...")
+                Log.d(TAG, "Iniciando inicialización de base de datos...")
 
                 // Poblar datos iniciales
                 dataSeeder.seedInitialData()
@@ -45,23 +45,21 @@ class DatabaseInitializer @Inject constructor(
                 // Verificar datos
                 verifyData()
 
-                Log.d(TAG, "✅ Base de datos inicializada correctamente")
+                Log.d(TAG, "Base de datos inicializada correctamente")
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Error al inicializar base de datos: ${e.message}", e)
+                Log.e(TAG, "Error al inicializar base de datos: ${e.message}", e)
             }
         }
     }
 
-    /**
-     * Verificar que los datos se insertaron correctamente
-     */
+    // Verificar que los datos se insertaron correctamente
     private suspend fun verifyData() {
-        Log.d(TAG, "📊 Verificando datos insertados...")
+        Log.d(TAG, "Verificando datos insertados...")
 
         // Verificar usuarios
         val userStats = userRepository.getUserStats()
         Log.d(TAG, """
-            👥 USUARIOS:
+            USUARIOS:
             - Total: ${userStats.totalUsers}
             - Compradores: ${userStats.totalBuyers}
             - Vendedores: ${userStats.totalSellers}
@@ -71,7 +69,7 @@ class DatabaseInitializer @Inject constructor(
         // Verificar tiendas
         val storeStats = storeRepository.getStoreStats()
         Log.d(TAG, """
-            🏪 TIENDAS:
+            TIENDAS:
             - Total: ${storeStats.totalStores}
             - Aprobadas: ${storeStats.approvedStores}
             - Pendientes: ${storeStats.pendingStores}
@@ -80,35 +78,34 @@ class DatabaseInitializer @Inject constructor(
 
         // Verificar categorías
         val categories = categoryRepository.getAllCategories().first()
-        Log.d(TAG, "📂 CATEGORÍAS: ${categories.size} categorías activas")
+        Log.d(TAG, "CATEGORÍAS: ${categories.size} categorías activas")
         categories.forEach {
             Log.d(TAG, "   - ${it.name}")
         }
 
         // Verificar productos
         val products = productRepository.getAllProducts().first()
-        Log.d(TAG, "📦 PRODUCTOS: ${products.size} productos activos")
+        Log.d(TAG, "PRODUCTOS: ${products.size} productos activos")
         products.take(3).forEach {
             Log.d(TAG, "   - ${it.name} (S/ ${it.price})")
         }
 
         // Verificar tiendas aprobadas
         val approvedStores = storeRepository.getApprovedStores().first()
-        Log.d(TAG, "✅ TIENDAS APROBADAS:")
+        Log.d(TAG, "TIENDAS APROBADAS:")
         approvedStores.forEach { store ->
             val productCount = productRepository.countProductsByStore(store.id)
             Log.d(TAG, "   - ${store.name} (${productCount} productos, Rating: ${store.rating}⭐)")
         }
     }
 
-    /**
-     * Test completo de la base de datos
-     * Prueba operaciones CRUD en todas las entidades
-     */
+    // Test completo de la base de datos
+    //Prueba operaciones CRUD en todas las entidades
+
     suspend fun runFullTest() {
         withContext(Dispatchers.IO) {
             try {
-                Log.d(TAG, "🧪 ========== INICIANDO TEST COMPLETO ==========")
+                Log.d(TAG, "INICIANDO TEST COMPLETO")
 
                 testUsers()
                 testStores()
@@ -116,9 +113,9 @@ class DatabaseInitializer @Inject constructor(
                 testProducts()
                 testCart()
 
-                Log.d(TAG, "✅ ========== TEST COMPLETO EXITOSO ==========")
+                Log.d(TAG, "TEST COMPLETO EXITOSO")
             } catch (e: Exception) {
-                Log.e(TAG, "❌ ========== TEST FALLÓ: ${e.message} ==========", e)
+                Log.e(TAG, "TEST FALLÓ: ${e.message}", e)
             }
         }
     }
@@ -192,16 +189,13 @@ class DatabaseInitializer @Inject constructor(
         }
     }
 
-    /**
-     * Mostrar resumen de la base de datos
-     */
+
+    // Mostrar resumen de la base de datos
+
     suspend fun showDatabaseSummary() {
         withContext(Dispatchers.IO) {
             Log.d(TAG, """
-                
-                ╔════════════════════════════════════════╗
-                ║     📊 RESUMEN BASE DE DATOS          ║
-                ╚════════════════════════════════════════╝
+                RESUMEN DE BASE DE DATOS
             """.trimIndent())
 
             verifyData()

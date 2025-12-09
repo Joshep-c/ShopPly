@@ -10,7 +10,6 @@ import javax.inject.Singleton
 
 /**
  * StoreRepository - Repositorio de tiendas
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/repository/StoreRepository.kt
  *
  * Gestiona:
  * - CRUD de tiendas
@@ -23,7 +22,7 @@ class StoreRepository @Inject constructor(
     private val storeDao: StoreDao
 ) {
 
-    // ===== CONSULTAS BÁSICAS =====
+    // CONSULTAS BÁSICAS
 
     /**
      * Obtener tienda por ID
@@ -46,7 +45,7 @@ class StoreRepository @Inject constructor(
      */
     fun searchStores(query: String): Flow<List<Store>> = storeDao.searchStores(query)
 
-    // ===== VENDEDOR: GESTIÓN DE TIENDA =====
+    // VENDEDOR: GESTIÓN DE TIENDA
 
     /**
      * Crear nueva tienda (Vendedor)
@@ -96,7 +95,7 @@ class StoreRepository @Inject constructor(
         }
     }
 
-    // ===== ADMIN: APROBACIÓN DE TIENDAS =====
+    // ADMIN: APROBACIÓN DE TIENDAS
 
     /**
      * Obtener tiendas pendientes de aprobación (Admin)
@@ -145,7 +144,7 @@ class StoreRepository @Inject constructor(
     fun getStoresByStatus(status: StoreStatus): Flow<List<Store>> =
         storeDao.getStoresByStatus(status)
 
-    // ===== ESTADÍSTICAS =====
+    // ESTADÍSTICAS
 
     /**
      * Obtener estadísticas de tiendas (Admin)
@@ -163,7 +162,7 @@ class StoreRepository @Inject constructor(
 
     /**
      * Actualizar calificación de la tienda
-     * (Para cuando se implemente el sistema de reviews)
+     * (Para el sistema de reviews, en un futuro)
      */
     suspend fun updateStoreRating(storeId: Long, rating: Float) {
         storeDao.updateStoreRating(storeId, rating)

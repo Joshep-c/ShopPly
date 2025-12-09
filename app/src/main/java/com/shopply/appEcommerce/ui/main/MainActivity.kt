@@ -31,17 +31,20 @@ import javax.inject.Inject
  * - Delegar la lógica de autenticación a MainViewModel
  *
  * Buenas prácticas implementadas:
- * ✅ Separación de responsabilidades (UI vs Lógica de negocio)
- * ✅ MVVM Pattern (ViewModel gestiona el estado)
- * ✅ Inyección de dependencias con Hilt
- * ✅ StateFlow para estados reactivos
- * ✅ SplashScreen profesional
+ * - Separación de responsabilidades (UI vs Lógica de negocio)
+ * - MVVM Pattern (ViewModel gestiona el estado)
+ * - Inyección de dependencias con Hilt
+ * - StateFlow para estados reactivos
+ * - SplashScreen profesional
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var databaseInitializer: DatabaseInitializer
+
+    @Inject
+    lateinit var userRepository: com.shopply.appEcommerce.data.repository.UserRepository
 
     // ViewModel para gestionar el estado de autenticación
     private val mainViewModel: MainViewModel by viewModels()
@@ -61,7 +64,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainContent(
                         modifier = Modifier.padding(innerPadding),
-                        viewModel = mainViewModel
+                        viewModel = mainViewModel,
+                        userRepository = userRepository
                     )
                 }
             }
@@ -70,32 +74,29 @@ class MainActivity : ComponentActivity() {
 
     private fun initializeDatabase() {
         lifecycleScope.launch {
-            // Siempre inicializar datos (solo se insertan si la BD está vacía)
+            // Siempre inicializar datos
             databaseInitializer.initialize()
 
-            // Modo DEBUG: Mostrar logs detallados
             if (isDebugMode) {
                 databaseInitializer.showDatabaseSummary()
-
-                // OPCIONAL: Test completo (descomenta para verificar todas las operaciones)
-                // databaseInitializer.runFullTest()
             }
         }
     }
 }
 
-/**
- * MainContent - Composable que gestiona los diferentes estados de la app
- *
- * Estados:
- * - Loading -> Mostrar SplashScreen
- * - Authenticated -> Navegar a HomeScreen
- * - Unauthenticated -> Mostrar AuthScreen (bienvenida)
- */
+
+ // MainContent - Composable que gestiona los diferentes estados de la app
+
+ // Estados:
+ // - Loading -> Mostrar SplashScreen
+ // - Authenticated -> Navegar a HomeScreen
+ // - Unauthenticated -> Mostrar AuthScreen (bienvenida y login)
+
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    userRepository: com.shopply.appEcommerce.data.repository.UserRepository
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -106,10 +107,11 @@ private fun MainContent(
         }
 
         is MainUiState.Authenticated -> {
-            // Usuario autenticado: Ir a Home
+            // Usuario autenticado: Ir a Home con navegación inferior
             NavGraph(
                 modifier = modifier,
-                startDestination = Screen.Home.route
+                startDestination = Screen.Home.route,
+                userRepository = userRepository
             )
         }
 
@@ -117,7 +119,8 @@ private fun MainContent(
             // Usuario no autenticado: Mostrar bienvenida
             NavGraph(
                 modifier = modifier,
-                startDestination = Screen.Auth.route
+                startDestination = Screen.Auth.route,
+                userRepository = userRepository
             )
         }
     }

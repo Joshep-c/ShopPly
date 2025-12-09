@@ -33,8 +33,6 @@ class UserRepository @Inject constructor(
     }
 
     // GESTIÓN DE SESIÓN
-
-    
     // Obtiene el usuario actual de la sesión
      
     fun getCurrentUser(): Flow<User?> {
@@ -89,7 +87,6 @@ class UserRepository @Inject constructor(
 
     
     // Registro de nuevo usuario
-    
     suspend fun register(
         email: String,
         name: String,
@@ -105,7 +102,7 @@ class UserRepository @Inject constructor(
 
             val user = User(
                 email = email,
-                passwordHash = password, // En producción usar hash real
+                passwordHash = password,
                 name = name,
                 phone = phone,
                 userRole = userRole
@@ -124,13 +121,11 @@ class UserRepository @Inject constructor(
     }
 
     // Cierre de sesión
-    
     suspend fun logout() {
         dataStore.edit { it.remove(CURRENT_USER_ID) }
     }
 
     // GESTIÓN DE PERFIL
-
     // Actualizar información del usuario
     
     suspend fun updateProfile(user: User): Result<Unit> {
@@ -143,7 +138,6 @@ class UserRepository @Inject constructor(
     }
 
     // ADMIN: GESTIÓN DE USUARIOS
-
     // Obtener todos los usuarios (Admin)
      
     fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
@@ -175,7 +169,6 @@ class UserRepository @Inject constructor(
     }
 
     // ESTADÍSTICAS
-
     // Obtener estadísticas de usuarios
     
     suspend fun getUserStats(): UserStats {

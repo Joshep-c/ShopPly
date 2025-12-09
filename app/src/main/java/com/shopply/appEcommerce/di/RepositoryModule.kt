@@ -2,8 +2,17 @@ package com.shopply.appEcommerce.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.shopply.appEcommerce.data.local.dao.*
-import com.shopply.appEcommerce.data.repository.*
+import com.shopply.appEcommerce.data.local.dao.CartDao
+import com.shopply.appEcommerce.data.local.dao.CategoryDao
+import com.shopply.appEcommerce.data.local.dao.ProductDao
+import com.shopply.appEcommerce.data.local.dao.StoreDao
+import com.shopply.appEcommerce.data.local.dao.UserDao
+import com.shopply.appEcommerce.data.repository.CartRepository
+import com.shopply.appEcommerce.data.repository.CategoryRepository
+import com.shopply.appEcommerce.data.repository.DataSeeder
+import com.shopply.appEcommerce.data.repository.ProductRepository
+import com.shopply.appEcommerce.data.repository.StoreRepository
+import com.shopply.appEcommerce.data.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,10 +21,9 @@ import javax.inject.Singleton
 
 /**
  * RepositoryModule - Módulo de inyección de dependencias para Repositories
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/di/RepositoryModule.kt
  *
  * Provee:
- * - Todos los repositorios del MVP
+ * - Todos los repositorios
  * - DataSeeder para poblar datos iniciales
  */
 @Module

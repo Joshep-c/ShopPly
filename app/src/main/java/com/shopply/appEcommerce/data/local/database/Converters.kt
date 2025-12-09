@@ -1,8 +1,8 @@
 package com.shopply.appEcommerce.data.local.database
 
 import androidx.room.TypeConverter
-import com.shopply.appEcommerce.data.local.entities.UserRole
 import com.shopply.appEcommerce.data.local.entities.StoreStatus
+import com.shopply.appEcommerce.data.local.entities.UserRole
 
 
 // Converters - Conversores de tipos para Room
@@ -12,7 +12,6 @@ import com.shopply.appEcommerce.data.local.entities.StoreStatus
 class Converters {
 
     // UserRole
-
     @TypeConverter
     fun fromUserRole(role: UserRole): String {
         return role.name

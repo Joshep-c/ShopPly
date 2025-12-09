@@ -1,12 +1,12 @@
 package com.shopply.appEcommerce.data.local.entities
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 
- // Entidad Store - Tiendas de las PYMEs
+// Entidad Store - Tiendas de las PYMEs
 
  // Cada vendedor puede tener UNA tienda
  // Las tiendas deben ser aprobadas por un admin antes de estar activas

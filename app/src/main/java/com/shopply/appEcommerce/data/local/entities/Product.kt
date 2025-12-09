@@ -1,12 +1,12 @@
 package com.shopply.appEcommerce.data.local.entities
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 
- // Entidad Product - Productos del catálogo
+// Entidad Product - Productos del catálogo
 
  // Los vendedores publican productos en sus tiendas
  // Los productos pertenecen a una categoría y una tienda

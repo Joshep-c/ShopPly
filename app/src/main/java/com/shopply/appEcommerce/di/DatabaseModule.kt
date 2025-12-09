@@ -2,7 +2,11 @@ package com.shopply.appEcommerce.di
 
 import android.content.Context
 import androidx.room.Room
-import com.shopply.appEcommerce.data.local.dao.*
+import com.shopply.appEcommerce.data.local.dao.CartDao
+import com.shopply.appEcommerce.data.local.dao.CategoryDao
+import com.shopply.appEcommerce.data.local.dao.ProductDao
+import com.shopply.appEcommerce.data.local.dao.StoreDao
+import com.shopply.appEcommerce.data.local.dao.UserDao
 import com.shopply.appEcommerce.data.local.database.AppDatabase
 import dagger.Module
 import dagger.Provides

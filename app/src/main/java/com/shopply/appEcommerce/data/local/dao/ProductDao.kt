@@ -1,11 +1,16 @@
 package com.shopply.appEcommerce.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import com.shopply.appEcommerce.data.local.entities.Product
 import kotlinx.coroutines.flow.Flow
 
 
- // ProductDao - Acceso a datos de productos
+// ProductDao - Acceso a datos de productos
 
 @Dao
 interface ProductDao {

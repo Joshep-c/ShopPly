@@ -1,11 +1,11 @@
 package com.shopply.appEcommerce.data.local.entities
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 
- // Entidad Category - Categorías de productos
+// Entidad Category - Categorías de productos
 
  // Organiza los productos en categorías para facilitar la búsqueda
  // Solo el ADMIN puede gestionar categorías

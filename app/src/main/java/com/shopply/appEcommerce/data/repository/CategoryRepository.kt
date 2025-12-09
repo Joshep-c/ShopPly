@@ -9,7 +9,6 @@ import javax.inject.Singleton
 
 /**
  * CategoryRepository - Repositorio de categorías
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/repository/CategoryRepository.kt
  *
  * Gestiona:
  * - Consulta de categorías (todos los usuarios)
@@ -21,7 +20,7 @@ class CategoryRepository @Inject constructor(
     private val categoryDao: CategoryDao
 ) {
 
-    // ===== CONSULTAS (TODOS LOS USUARIOS) =====
+    // CONSULTAS (TODOS LOS USUARIOS)
 
     /**
      * Obtener todas las categorías activas
@@ -33,7 +32,7 @@ class CategoryRepository @Inject constructor(
      */
     fun getCategoryById(categoryId: Long): Flow<Category?> = categoryDao.getCategoryById(categoryId)
 
-    // ===== ADMIN: GESTIÓN DE CATEGORÍAS =====
+    // ADMIN: GESTIÓN DE CATEGORÍAS
 
     /**
      * Crear nueva categoría (Admin)
@@ -92,7 +91,7 @@ class CategoryRepository @Inject constructor(
      */
     fun getAllCategoriesIncludingInactive(): Flow<List<Category>> = categoryDao.getAllCategories()
 
-    // ===== DATOS INICIALES =====
+    // DATOS INICIALES
 
     /**
      * Insertar categorías predefinidas
@@ -100,7 +99,7 @@ class CategoryRepository @Inject constructor(
      */
     suspend fun insertDefaultCategories() {
         val count = categoryDao.countActiveCategories()
-        if (count > 0) return // Ya existen categorías
+        if (count > 0) return
 
         val defaultCategories = listOf(
             Category(

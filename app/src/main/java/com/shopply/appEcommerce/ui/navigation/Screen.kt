@@ -11,6 +11,13 @@ sealed class Screen(val route: String) {
     data object Categories : Screen("categories")
     data object Cart : Screen("cart")
     data object Profile : Screen("profile")
+    data object Favorites : Screen("favorites")
+
+    // Rutas de vendedor
+    data object Store : Screen("store")
+
+    // Rutas de administrador
+    data object AdminStores : Screen("admin_stores")
 
     // Rutas con argumentos
     data object ProductDetail : Screen("product/{productId}") {

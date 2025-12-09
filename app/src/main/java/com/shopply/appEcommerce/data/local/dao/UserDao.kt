@@ -1,12 +1,17 @@
 package com.shopply.appEcommerce.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import com.shopply.appEcommerce.data.local.entities.User
 import com.shopply.appEcommerce.data.local.entities.UserRole
 import kotlinx.coroutines.flow.Flow
 
 
- // UserDao - Acceso a datos de usuarios
+// UserDao - Acceso a datos de usuarios
 
 @Dao
 interface UserDao {

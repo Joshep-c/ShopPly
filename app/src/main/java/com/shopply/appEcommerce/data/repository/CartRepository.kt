@@ -8,45 +8,39 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * CartRepository - Repositorio del carrito de compras
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/repository/CartRepository.kt
- *
- * Gestiona:
- * - Items del carrito persistente
- * - Agregar/quitar productos
- * - Actualizar cantidades
- * - Validaciones de stock
- */
+
+// CartRepository - Repositorio del carrito de compras
+
+// Gestiona:
+// - Items del carrito persistente
+// - Agregar/quitar productos
+// - Actualizar cantidades
+// - Validaciones de stock
+
 @Singleton
 class CartRepository @Inject constructor(
     private val cartDao: CartDao,
     private val productDao: ProductDao
 ) {
 
-    // ===== CONSULTAS =====
+    //CONSULTAS
+    // Obtener items del carrito del usuario
 
-    /**
-     * Obtener items del carrito del usuario
-     */
     fun getCartItems(userId: Long): Flow<List<CartItem>> = cartDao.getCartItems(userId)
 
-    /**
-     * Obtener cantidad de items en el carrito
-     */
+    // Obtener cantidad de items en el carrito
+
     fun getCartItemCount(userId: Long): Flow<Int> = cartDao.getCartItemCount(userId)
 
-    /**
-     * Obtener cantidad de items en el carrito (sincrónico)
-     */
+    // Obtener cantidad de items en el carrito (sincrónico)
+
     suspend fun getCartItemCountSync(userId: Long): Int = cartDao.getCartItemCountSync(userId)
 
-    // ===== AGREGAR AL CARRITO =====
+    // AGREGAR AL CARRITO
 
-    /**
-     * Agregar producto al carrito
-     * Si ya existe, incrementa la cantidad
-     */
+    // Agregar producto al carrito
+    // Si ya existe, incrementa la cantidad
+
     suspend fun addToCart(userId: Long, productId: Long, quantity: Int = 1): Result<Unit> {
         return try {
             // Validar cantidad
@@ -84,12 +78,10 @@ class CartRepository @Inject constructor(
         }
     }
 
-    // ===== ACTUALIZAR CANTIDAD =====
+    // ACTUALIZAR CANTIDAD
+    // Actualizar cantidad de un item en el carrito
+    // Si quantity = 0, elimina el item
 
-    /**
-     * Actualizar cantidad de un item en el carrito
-     * Si quantity = 0, elimina el item
-     */
     suspend fun updateQuantity(userId: Long, productId: Long, quantity: Int): Result<Unit> {
         return try {
             if (quantity < 0) {
@@ -114,11 +106,9 @@ class CartRepository @Inject constructor(
         }
     }
 
-    // ===== ELIMINAR DEL CARRITO =====
+    // ELIMINAR DEL CARRITO
+    // Eliminar un producto del carrito
 
-    /**
-     * Eliminar un producto del carrito
-     */
     suspend fun removeFromCart(userId: Long, productId: Long): Result<Unit> {
         return try {
             cartDao.removeFromCart(userId, productId)
@@ -128,9 +118,8 @@ class CartRepository @Inject constructor(
         }
     }
 
-    /**
-     * Vaciar todo el carrito
-     */
+    // Vaciar todo el carrito
+
     suspend fun clearCart(userId: Long): Result<Unit> {
         return try {
             cartDao.clearCart(userId)
@@ -140,12 +129,9 @@ class CartRepository @Inject constructor(
         }
     }
 
-    // ===== VALIDACIONES =====
+    // VALIDACIONES
+    // Verificar si todos los items del carrito tienen stock disponible
 
-    /**
-     * Verificar si todos los items del carrito tienen stock disponible
-     * Útil antes de proceder al checkout
-     */
     suspend fun validateCartStock(userId: Long): Result<List<String>> {
         return try {
             val items = mutableListOf<CartItem>()

@@ -1,11 +1,17 @@
 package com.shopply.appEcommerce.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.shopply.appEcommerce.data.local.entities.CartItem
 import kotlinx.coroutines.flow.Flow
 
 
- // CartDao - Acceso a datos del carrito de compras
+// CartDao - Acceso a datos del carrito de compras
 
 @Dao
 interface CartDao {
@@ -45,8 +51,6 @@ interface CartDao {
     suspend fun updateQuantity(userId: Long, productId: Long, quantity: Int)
 
     // OPERACIONES COMPUESTAS
-
-    
     // Agrega un producto al carrito o incrementa su cantidad si ya existe
     
     @Transaction

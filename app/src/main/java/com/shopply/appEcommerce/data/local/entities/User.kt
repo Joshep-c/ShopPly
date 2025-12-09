@@ -1,11 +1,11 @@
 package com.shopply.appEcommerce.data.local.entities
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 
- // Entidad User - Usuarios del sistema
+// Entidad User - Usuarios del sistema
 
  // Soporta 3 tipos de usuarios:
  // - BUYER: Comprador

@@ -9,7 +9,6 @@ import javax.inject.Singleton
 
 /**
  * ProductRepository - Repositorio de productos
- * Ubicación: app/src/main/java/com/shopply/appEcommerce/data/repository/ProductRepository.kt
  *
  * Gestiona:
  * - Catálogo de productos (compradores)
@@ -22,7 +21,7 @@ class ProductRepository @Inject constructor(
     private val productDao: ProductDao
 ) {
 
-    // ===== COMPRADOR: VER CATÁLOGO =====
+    // COMPRADOR: VER CATÁLOGO
 
     /**
      * Obtener todos los productos activos
@@ -50,7 +49,7 @@ class ProductRepository @Inject constructor(
      */
     fun getNewProducts(limit: Int = 10): Flow<List<Product>> = productDao.getNewProducts(limit)
 
-    // ===== VENDEDOR: GESTIÓN DE PRODUCTOS =====
+    // VENDEDOR: GESTIÓN DE PRODUCTOS
 
     /**
      * Obtener productos de una tienda específica
@@ -129,7 +128,7 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    // ===== GESTIÓN DE INVENTARIO =====
+    // GESTIÓN DE INVENTARIO
 
     /**
      * Reducir stock de un producto
@@ -161,7 +160,7 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    // ===== ESTADÍSTICAS =====
+    // ESTADÍSTICAS
 
     /**
      * Contar productos de una tienda
