@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
  * Proporciona feedback visual profesional al usuario
  */
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen() {
     // Animación de fade-in para el logo
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val alpha by infiniteTransition.animateFloat(
@@ -46,7 +46,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     )
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(

@@ -23,12 +23,11 @@ import com.shopply.appEcommerce.R
 
 @Composable
 fun AuthScreen(
-    modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,

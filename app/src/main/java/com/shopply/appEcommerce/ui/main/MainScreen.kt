@@ -40,7 +40,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
     userRepository: UserRepository,
     onLogout: () -> Unit
 ) {
@@ -58,7 +57,6 @@ fun MainScreen(
     val bottomNavItems = getBottomNavItems(userRole)
 
     Scaffold(
-        modifier = modifier,
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -61,13 +61,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ShopPly2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainContent(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = mainViewModel,
-                        userRepository = userRepository
-                    )
-                }
+                MainContent(
+                    viewModel = mainViewModel,
+                    userRepository = userRepository
+                )
             }
         }
     }
@@ -94,7 +91,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainContent(
-    modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     userRepository: com.shopply.appEcommerce.data.repository.UserRepository
 ) {
@@ -103,13 +99,12 @@ private fun MainContent(
     when (uiState) {
         is MainUiState.Loading -> {
             // Estado inicial: Verificando sesión
-            SplashScreen(modifier = modifier)
+            SplashScreen()
         }
 
         is MainUiState.Authenticated -> {
             // Usuario autenticado: Ir a Home con navegación inferior
             NavGraph(
-                modifier = modifier,
                 startDestination = Screen.Home.route,
                 userRepository = userRepository
             )
@@ -118,7 +113,6 @@ private fun MainContent(
         is MainUiState.Unauthenticated -> {
             // Usuario no autenticado: Mostrar bienvenida
             NavGraph(
-                modifier = modifier,
                 startDestination = Screen.Auth.route,
                 userRepository = userRepository
             )

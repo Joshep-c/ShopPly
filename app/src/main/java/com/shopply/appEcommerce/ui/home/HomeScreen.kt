@@ -65,7 +65,6 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     onLogout: () -> Unit
 ) {
@@ -76,7 +75,6 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Logo con gradiente estilo moderno
                         Box(
                             modifier = Modifier
                                 .size(40.dp)
@@ -157,7 +155,7 @@ fun HomeScreen(
         when (val state = uiState) {
             is HomeUiState.Loading -> {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
@@ -167,7 +165,7 @@ fun HomeScreen(
             }
             is HomeUiState.Success -> {
                 HomeContent(
-                    modifier = modifier.padding(paddingValues),
+                    modifier = Modifier.padding(paddingValues),
                     user = state.user,
                     categories = state.categories,
                     recommendedProducts = state.recommendedProducts,
@@ -176,7 +174,7 @@ fun HomeScreen(
             }
             is HomeUiState.Error -> {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center

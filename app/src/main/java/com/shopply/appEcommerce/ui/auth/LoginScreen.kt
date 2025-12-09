@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier,
     viewModel: AuthViewModel,
     onSignUpClick: () -> Unit
 ) {
@@ -48,7 +47,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,

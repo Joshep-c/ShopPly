@@ -2,7 +2,6 @@ package com.shopply.appEcommerce.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,20 +18,17 @@ import com.shopply.appEcommerce.ui.main.MainScreen
 
 @Composable
 fun NavGraph(
-    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Screen.Auth.route,
     userRepository: UserRepository? = null
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        startDestination = startDestination
     ) {
         // PANTALLAS DE AUTENTICACIÓN
         composable(Screen.Auth.route) {
             AuthScreen(
-                modifier = modifier,
                 onLoginClick = {
                     navController.navigate(Screen.Login.route)
                 },
@@ -59,7 +55,6 @@ fun NavGraph(
             }
 
             LoginScreen(
-                modifier = modifier,
                 viewModel = viewModel,
                 onSignUpClick = {
                     navController.navigate(Screen.SignUp.route)
@@ -82,7 +77,6 @@ fun NavGraph(
             }
 
             SignUpScreen(
-                modifier = modifier,
                 viewModel = viewModel,
                 onLoginClick = {
                     navController.popBackStack()
@@ -94,7 +88,6 @@ fun NavGraph(
         composable(Screen.Home.route) {
             if (userRepository != null) {
                 MainScreen(
-                    modifier = modifier,
                     userRepository = userRepository,
                     onLogout = {
                         navController.navigate(Screen.Auth.route) {
