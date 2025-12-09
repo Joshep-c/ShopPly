@@ -222,7 +222,7 @@ private fun ProductDetailContent(
                 }
             }
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Precio
             Row(
@@ -235,27 +235,6 @@ private fun ProductDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Mostrar precio con descuento simulado (opcional)
-                if (product.stock > 10) {
-                    Text(
-                        text = "S/ ${String.format("%.2f", product.price * 1.2)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textDecoration = TextDecoration.LineThrough,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                    Surface(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = "16% OFF",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
             }
 
             // Stock disponible
@@ -280,7 +259,7 @@ private fun ProductDetailContent(
                 )
             }
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Descripción
             Text(
@@ -294,7 +273,7 @@ private fun ProductDetailContent(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
             )
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Selector de cantidad
             if (product.stock > 0) {

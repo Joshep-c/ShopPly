@@ -10,98 +10,102 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-/**
- * ShopPly Dark Color Scheme
- * Esquema oscuro optimizado para compras nocturnas
- */
-private val DarkColorScheme = darkColorScheme(
-    primary = ShopPlyBlueLight,
-    onPrimary = Color.Black,
-    primaryContainer = ShopPlyBlueDark,
-    onPrimaryContainer = ShopPlyBlueLight,
+private val LightColorScheme = lightColorScheme(
+    // Primary (#0066ff)
+    primary = LightPrimary,
+    onPrimary = LightOnPrimary,
+    primaryContainer = LightPrimary.copy(alpha = 0.1f),
+    onPrimaryContainer = LightPrimary,
 
-    secondary = ShopPlyOrangeLight,
-    onSecondary = Color.Black,
-    secondaryContainer = ShopPlyOrangeDark,
-    onSecondaryContainer = ShopPlyOrangeLight,
+    // Secondary (#10b981)
+    secondary = LightSecondary,
+    onSecondary = LightOnSecondary,
+    secondaryContainer = LightSecondary.copy(alpha = 0.1f),
+    onSecondaryContainer = LightSecondary,
 
-    tertiary = ShopPlyGreen,
-    onTertiary = Color.White,
-    tertiaryContainer = Color(0xFF1B5E20),
-    onTertiaryContainer = Color(0xFF81C784),
+    // Tertiary/Accent (#f59e0b)
+    tertiary = LightAccent,
+    onTertiary = LightOnAccent,
+    tertiaryContainer = LightAccent.copy(alpha = 0.1f),
+    onTertiaryContainer = LightAccent,
 
-    error = ErrorRed,
-    onError = Color.White,
-    errorContainer = Color(0xFF8B1A1A),
-    onErrorContainer = Color(0xFFFFDAD6),
+    // Error/Destructive (#ef4444)
+    error = LightDestructive,
+    onError = LightOnDestructive,
+    errorContainer = LightDestructive.copy(alpha = 0.1f),
+    onErrorContainer = LightDestructive,
 
-    background = BackgroundDark,
-    onBackground = Color(0xFFE6E1E5),
+    // Background & Surface
+    background = LightBackground,
+    onBackground = LightForeground,
+    surface = LightCard,
+    onSurface = LightCardForeground,
+    surfaceVariant = LightMuted,
+    onSurfaceVariant = LightMutedForeground,
 
-    surface = SurfaceDark,
-    onSurface = Color(0xFFE6E1E5),
-    surfaceVariant = Color(0xFF2B2B2B),
-    onSurfaceVariant = ShopPlyGray400,
-
-    outline = ShopPlyGray600,
-    outlineVariant = ShopPlyGray800
+    // Outline & Borders
+    outline = LightBorder,
+    outlineVariant = LightBorder.copy(alpha = 0.5f)
 )
 
 /**
- * ShopPly Light Color Scheme
- * Esquema claro optimizado para visualización de productos
+ * ShopPly Dark Color Scheme
+ * Basado en tokens CSS .dark
  */
-private val LightColorScheme = lightColorScheme(
-    primary = ShopPlyBlue,
-    onPrimary = Color.White,
-    primaryContainer = ShopPlyBlueLight,
-    onPrimaryContainer = ShopPlyBlueDark,
+private val DarkColorScheme = darkColorScheme(
+    // Primary (invertido en dark mode)
+    primary = DarkPrimary,
+    onPrimary = DarkOnPrimary,
+    primaryContainer = DarkOnPrimary,
+    onPrimaryContainer = DarkPrimary,
 
-    secondary = ShopPlyOrange,
-    onSecondary = Color.White,
-    secondaryContainer = ShopPlyOrangeLight,
-    onSecondaryContainer = ShopPlyOrangeDark,
+    // Secondary
+    secondary = DarkSecondary,
+    onSecondary = DarkOnSecondary,
+    secondaryContainer = DarkSecondary,
+    onSecondaryContainer = DarkOnSecondary,
 
-    tertiary = ShopPlyGreen,
-    onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFC8E6C9),
-    onTertiaryContainer = Color(0xFF1B5E20),
+    // Tertiary/Accent
+    tertiary = DarkAccent,
+    onTertiary = DarkOnAccent,
+    tertiaryContainer = DarkAccent,
+    onTertiaryContainer = DarkOnAccent,
 
-    error = ErrorRed,
-    onError = Color.White,
-    errorContainer = Color(0xFFFFDAD6),
-    onErrorContainer = Color(0xFF410002),
+    // Error/Destructive
+    error = DarkDestructive,
+    onError = DarkOnDestructive,
+    errorContainer = DarkDestructive,
+    onErrorContainer = DarkOnDestructive,
 
-    background = BackgroundLight,
-    onBackground = ShopPlyGray900,
+    // Background & Surface
+    background = DarkBackground,
+    onBackground = DarkForeground,
+    surface = DarkCard,
+    onSurface = DarkCardForeground,
+    surfaceVariant = DarkMuted,
+    onSurfaceVariant = DarkMutedForeground,
 
-    surface = SurfaceLight,
-    onSurface = ShopPlyGray900,
-    surfaceVariant = ShopPlyGray100,
-    onSurfaceVariant = ShopPlyGray700,
-
-    outline = ShopPlyGray400,
-    outlineVariant = ShopPlyGray300
+    // Outline & Borders
+    outline = DarkBorder,
+    outlineVariant = DarkBorder.copy(alpha = 0.5f)
 )
 
 /**
  * ShopPly Theme
  *
- * Tema principal de la aplicación con soporte para:
+ * Tema principal con colores alineados a diseño web CSS
+ * Soporta:
  * - Modo claro/oscuro
  * - Dynamic Color (Android 12+)
- * - Status bar personalizado
  */
 @Composable
 fun ShopPly2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color disponible en Android 12+
     dynamicColor: Boolean = false, // Desactivado por defecto para mantener branding
     content: @Composable () -> Unit
 ) {
@@ -118,7 +122,7 @@ fun ShopPly2Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
@@ -126,6 +130,7 @@ fun ShopPly2Theme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = Shapes,
         content = content
     )
 }
