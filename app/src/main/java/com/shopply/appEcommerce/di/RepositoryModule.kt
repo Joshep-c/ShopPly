@@ -4,12 +4,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.shopply.appEcommerce.data.local.dao.CartDao
 import com.shopply.appEcommerce.data.local.dao.CategoryDao
+import com.shopply.appEcommerce.data.local.dao.FavoriteDao
 import com.shopply.appEcommerce.data.local.dao.ProductDao
 import com.shopply.appEcommerce.data.local.dao.StoreDao
 import com.shopply.appEcommerce.data.local.dao.UserDao
 import com.shopply.appEcommerce.data.repository.CartRepository
 import com.shopply.appEcommerce.data.repository.CategoryRepository
 import com.shopply.appEcommerce.data.repository.DataSeeder
+import com.shopply.appEcommerce.data.repository.FavoriteRepository
 import com.shopply.appEcommerce.data.repository.ProductRepository
 import com.shopply.appEcommerce.data.repository.StoreRepository
 import com.shopply.appEcommerce.data.repository.UserRepository
@@ -87,6 +89,18 @@ object RepositoryModule {
         productDao: ProductDao
     ): CartRepository {
         return CartRepository(cartDao, productDao)
+    }
+
+    /**
+     * Provee FavoriteRepository
+     */
+    @Provides
+    @Singleton
+    fun provideFavoriteRepository(
+        favoriteDao: FavoriteDao,
+        productDao: ProductDao
+    ): FavoriteRepository {
+        return FavoriteRepository(favoriteDao, productDao)
     }
 
     /**

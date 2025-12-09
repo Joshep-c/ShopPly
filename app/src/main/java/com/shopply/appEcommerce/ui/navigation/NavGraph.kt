@@ -15,6 +15,7 @@ import com.shopply.appEcommerce.ui.auth.AuthViewModel
 import com.shopply.appEcommerce.ui.auth.LoginScreen
 import com.shopply.appEcommerce.ui.auth.SignUpScreen
 import com.shopply.appEcommerce.ui.main.MainScreen
+import com.shopply.appEcommerce.ui.productdetail.ProductDetailScreen
 
 @Composable
 fun NavGraph(
@@ -111,10 +112,11 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
-            // ProductDetailScreen(
-            //     productId = productId,
-            //     onBackClick = { navController.popBackStack() }
-            // )
+            ProductDetailScreen(
+                productId = productId,
+                onBackClick = { navController.popBackStack() },
+                onCartClick = { navController.navigate(Screen.Cart.route) }
+            )
         }
     }
 }

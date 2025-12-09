@@ -20,6 +20,9 @@ interface ProductDao {
     @Query("SELECT * FROM products WHERE isActive = 1 ORDER BY createdAt DESC")
     fun getAllActiveProducts(): Flow<List<Product>>
 
+    @Query("SELECT * FROM products ORDER BY createdAt DESC")
+    fun getAllProductsFlow(): Flow<List<Product>>
+
     @Query("SELECT * FROM products WHERE id = :productId")
     fun getProductById(productId: Long): Flow<Product?>
 

@@ -66,7 +66,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onProductClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -169,7 +170,8 @@ fun HomeScreen(
                     user = state.user,
                     categories = state.categories,
                     recommendedProducts = state.recommendedProducts,
-                    specialOffers = state.specialOffers
+                    specialOffers = state.specialOffers,
+                    onProductClick = onProductClick
                 )
             }
             is HomeUiState.Error -> {
@@ -204,7 +206,8 @@ private fun HomeContent(
     user: com.shopply.appEcommerce.data.local.entities.User,
     categories: List<com.shopply.appEcommerce.data.local.entities.Category>,
     recommendedProducts: List<com.shopply.appEcommerce.data.local.entities.Product>,
-    specialOffers: List<com.shopply.appEcommerce.data.local.entities.Product>
+    specialOffers: List<com.shopply.appEcommerce.data.local.entities.Product>,
+    onProductClick: (Long) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -227,12 +230,18 @@ private fun HomeContent(
 
         // Productos recomendados reales
         item {
-            RecommendedProducts(products = recommendedProducts)
+            RecommendedProducts(
+                products = recommendedProducts,
+                onProductClick = onProductClick
+            )
         }
 
         // Ofertas especiales reales
         item {
-            SpecialOffers(products = specialOffers)
+            SpecialOffers(
+                products = specialOffers,
+                onProductClick = onProductClick
+            )
         }
     }
 }
@@ -486,7 +495,10 @@ private fun CategoryItem(category: com.shopply.appEcommerce.data.local.entities.
 }
 
 @Composable
-private fun RecommendedProducts(products: List<com.shopply.appEcommerce.data.local.entities.Product>) {
+private fun RecommendedProducts(
+    products: List<com.shopply.appEcommerce.data.local.entities.Product>,
+    onProductClick: (Long) -> Unit = {}
+) {
     if (products.isEmpty()) return
 
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
@@ -512,14 +524,21 @@ private fun RecommendedProducts(products: List<com.shopply.appEcommerce.data.loc
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(products) { product ->
-                ProductCard(product = product, isOffer = false)
+                ProductCard(
+                    product = product,
+                    isOffer = false,
+                    onClick = { onProductClick(product.id) }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun SpecialOffers(products: List<com.shopply.appEcommerce.data.local.entities.Product>) {
+private fun SpecialOffers(
+    products: List<com.shopply.appEcommerce.data.local.entities.Product>,
+    onProductClick: (Long) -> Unit = {}
+) {
     if (products.isEmpty()) return
 
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
@@ -545,18 +564,26 @@ private fun SpecialOffers(products: List<com.shopply.appEcommerce.data.local.ent
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(products) { product ->
-                ProductCard(product = product, isOffer = true)
+                ProductCard(
+                    product = product,
+                    isOffer = true,
+                    onClick = { onProductClick(product.id) }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun ProductCard(product: com.shopply.appEcommerce.data.local.entities.Product, isOffer: Boolean = false) {
+private fun ProductCard(
+    product: com.shopply.appEcommerce.data.local.entities.Product,
+    isOffer: Boolean = false,
+    onClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .width(170.dp)
-            .clickable { /* TODO: Navigate to product detail */ },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(

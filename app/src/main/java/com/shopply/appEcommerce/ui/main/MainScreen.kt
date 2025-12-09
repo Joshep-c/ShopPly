@@ -19,10 +19,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.shopply.appEcommerce.data.local.entities.UserRole
 import com.shopply.appEcommerce.data.repository.UserRepository
 import com.shopply.appEcommerce.ui.admin.AdminStoresScreen
@@ -32,6 +34,7 @@ import com.shopply.appEcommerce.ui.home.HomeScreen
 import com.shopply.appEcommerce.ui.home.HomeViewModel
 import com.shopply.appEcommerce.ui.navigation.Screen
 import com.shopply.appEcommerce.ui.navigation.getBottomNavItems
+import com.shopply.appEcommerce.ui.productdetail.ProductDetailScreen
 import com.shopply.appEcommerce.ui.profile.ProfileScreen
 import com.shopply.appEcommerce.ui.store.StoreScreen
 import kotlinx.coroutines.flow.first
@@ -108,16 +111,27 @@ fun MainNavHost(
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = viewModel,
-                onLogout = onLogout
+                onLogout = onLogout,
+                onProductClick = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId.toString()))
+                }
             )
         }
 
         composable(Screen.Favorites.route) {
-            FavoritesScreen(onProductClick = { /* TODO: Navigate to product detail */ })
+            FavoritesScreen(
+                onProductClick = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId.toString()))
+                }
+            )
         }
 
         composable(Screen.Cart.route) {
-            CartScreen(onProductClick = { /* TODO: Navigate to product detail */ })
+            CartScreen(
+                onProductClick = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId.toString()))
+                }
+            )
         }
 
         composable(Screen.Profile.route) {
@@ -127,7 +141,11 @@ fun MainNavHost(
         // Pantalla de Tienda (solo para vendedores)
         if (userRole == UserRole.SELLER) {
             composable(Screen.Store.route) {
-                StoreScreen(onProductClick = { /* TODO: Navigate to product detail */ })
+                StoreScreen(
+                    onProductClick = { productId ->
+                        navController.navigate(Screen.ProductDetail.createRoute(productId.toString()))
+                    }
+                )
             }
         }
 
@@ -136,6 +154,23 @@ fun MainNavHost(
             composable(Screen.AdminStores.route) {
                 AdminStoresScreen()
             }
+        }
+
+        // DETALLE DE PRODUCTO
+        composable(
+            route = Screen.ProductDetail.route,
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            ProductDetailScreen(
+                productId = productId,
+                onBackClick = { navController.popBackStack() },
+                onCartClick = { navController.navigate(Screen.Cart.route) }
+            )
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.shopply.appEcommerce.data.local.dao.CartDao
 import com.shopply.appEcommerce.data.local.dao.CategoryDao
+import com.shopply.appEcommerce.data.local.dao.FavoriteDao
 import com.shopply.appEcommerce.data.local.dao.ProductDao
 import com.shopply.appEcommerce.data.local.dao.StoreDao
 import com.shopply.appEcommerce.data.local.dao.UserDao
@@ -86,5 +87,14 @@ object DatabaseModule {
     @Singleton
     fun provideCartDao(database: AppDatabase): CartDao {
         return database.cartDao()
+    }
+
+    /**
+     * Provee FavoriteDao
+     */
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(database: AppDatabase): FavoriteDao {
+        return database.favoriteDao()
     }
 }
