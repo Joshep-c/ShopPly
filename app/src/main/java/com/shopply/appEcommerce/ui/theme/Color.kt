@@ -2,57 +2,96 @@ package com.shopply.appEcommerce.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ShopPly Brand Colors - E-commerce Theme
+/**
+ * ShopPly Color System
+ * Basado en tokens de diseño web para consistencia cross-platform
+ */
 
-// Primary Colors (Azul profesional para confianza)
-val ShopPlyBlue = Color(0xFF1976D2)
-val ShopPlyBlueLight = Color(0xFF4FC3F7)
-val ShopPlyBlueDark = Color(0xFF0D47A1)
 
-// Secondary Colors (Naranja para CTAs y ofertas)
-val ShopPlyOrange = Color(0xFFFF9800)
-val ShopPlyOrangeLight = Color(0xFFFFB74D)
-val ShopPlyOrangeDark = Color(0xFFF57C00)
+// LIGHT THEME COLORS
 
-// Accent Colors
-val ShopPlyGreen = Color(0xFF4CAF50)      // Success, disponible
-val ShopPlyRed = Color(0xFFF44336)        // Error, agotado, ofertas
-val ShopPlyYellow = Color(0xFFFFEB3B)     // Ratings, destacados
 
-// Neutral Colors
-val ShopPlyGray100 = Color(0xFFF5F5F5)    // Background
-val ShopPlyGray200 = Color(0xFFEEEEEE)    // Card background
-val ShopPlyGray300 = Color(0xFFE0E0E0)    // Borders
-val ShopPlyGray400 = Color(0xFFBDBDBD)    // Disabled
-val ShopPlyGray500 = Color(0xFF9E9E9E)    // Icons secondary
-val ShopPlyGray600 = Color(0xFF757575)    // Text secondary
-val ShopPlyGray700 = Color(0xFF616161)    // Text primary
-val ShopPlyGray800 = Color(0xFF424242)    // Headers
-val ShopPlyGray900 = Color(0xFF212121)    // Text emphasis
+// Primary - Blue (#0066ff)
+val LightPrimary = Color(0xFF0066FF)
+val LightOnPrimary = Color(0xFFFFFFFF)
 
-// Semantic Colors
-val SuccessGreen = Color(0xFF66BB6A)
-val ErrorRed = Color(0xFFEF5350)
-val WarningOrange = Color(0xFFFFA726)
-val InfoBlue = Color(0xFF42A5F5)
+// Secondary - Green (#10b981)
+val LightSecondary = Color(0xFF10B981)
+val LightOnSecondary = Color(0xFFFFFFFF)
 
-// Background Colors
-val BackgroundLight = Color(0xFFFAFAFA)
-val BackgroundDark = Color(0xFF121212)
-val SurfaceLight = Color(0xFFFFFFFF)
-val SurfaceDark = Color(0xFF1E1E1E)
+// Accent - Orange (#f59e0b)
+val LightAccent = Color(0xFFF59E0B)
+val LightOnAccent = Color(0xFF1A202C)
 
-// Special Colors
+// Background & Surface
+val LightBackground = Color(0xFFFAFBFC)
+val LightForeground = Color(0xFF1A202C)
+val LightCard = Color(0xFFFFFFFF)
+val LightCardForeground = Color(0xFF1A202C)
+
+// Muted (fondos sutiles)
+val LightMuted = Color(0xFFF7FAFC)
+val LightMutedForeground = Color(0xFF64748B)
+
+// Destructive/Error
+val LightDestructive = Color(0xFFEF4444)
+val LightOnDestructive = Color(0xFFFFFFFF)
+
+// Borders & Inputs
+val LightBorder = Color(0x14000000)  // rgba(0, 0, 0, 0.08)
+val LightInputBackground = Color(0xFFF8FAFC)
+val LightSwitchBackground = Color(0xFFCBD5E1)
+
+// Charts
+val LightChart1 = Color(0xFF0066FF)  // Primary blue
+val LightChart2 = Color(0xFF10B981)  // Secondary green
+val LightChart3 = Color(0xFFF59E0B)  // Accent orange
+val LightChart4 = Color(0xFF8B5CF6)  // Purple
+val LightChart5 = Color(0xFFEC4899)  // Pink
+
+// DARK THEME COLORS
+
+// Background & Surface - oklch(0.145 0 0) ≈ #212529
+val DarkBackground = Color(0xFF212529)
+val DarkForeground = Color(0xFFFBFBFC)  // oklch(0.985 0 0)
+val DarkCard = Color(0xFF212529)
+val DarkCardForeground = Color(0xFFFBFBFC)
+
+// Primary - oklch(0.985 0 0) (claro en dark mode)
+val DarkPrimary = Color(0xFFFBFBFC)
+val DarkOnPrimary = Color(0xFF343A40)  // oklch(0.205 0 0)
+
+// Secondary - oklch(0.269 0 0) ≈ #444
+val DarkSecondary = Color(0xFF444444)
+val DarkOnSecondary = Color(0xFFFBFBFC)
+
+// Muted
+val DarkMuted = Color(0xFF444444)  // oklch(0.269 0 0)
+val DarkMutedForeground = Color(0xFFB5B5B5)  // oklch(0.708 0 0)
+
+// Accent
+val DarkAccent = Color(0xFF444444)
+val DarkOnAccent = Color(0xFFFBFBFC)
+
+// Destructive - oklch(0.396 0.141 25.723)
+val DarkDestructive = Color(0xFF8B3A3A)
+val DarkOnDestructive = Color(0xFFA85252)  // oklch(0.637 0.237 25.331)
+
+// Borders & Inputs
+val DarkBorder = Color(0xFF444444)
+val DarkInputBackground = Color(0xFF2B2B2B)
+val DarkRing = Color(0xFF707070)  // oklch(0.439 0 0)
+
+// Charts - oklch values
+val DarkChart1 = Color(0xFF5E7CE2)  // oklch(0.488 0.243 264.376) - blue
+val DarkChart2 = Color(0xFF52C97E)  // oklch(0.696 0.17 162.48) - green
+val DarkChart3 = Color(0xFFE8B339)  // oklch(0.769 0.188 70.08) - yellow
+val DarkChart4 = Color(0xFF9D7CD8)  // oklch(0.627 0.265 303.9) - purple
+val DarkChart5 = Color(0xFFD85577)  // oklch(0.645 0.246 16.439) - pink
+
+// SPECIAL COLORS
 val FavoriteRed = Color(0xFFE91E63)       // Corazón de favoritos
 val DiscountRed = Color(0xFFFF3B30)       // Badge de descuento
 val StarGold = Color(0xFFFFB800)          // Estrellas de rating
 val OnlineGreen = Color(0xFF4CAF50)       // Estado online
 
-// Legacy support (mantener para compatibilidad)
-val Purple80 = ShopPlyBlueLight
-val PurpleGrey80 = ShopPlyGray400
-val Pink80 = ShopPlyOrangeLight
-
-val Purple40 = ShopPlyBlue
-val PurpleGrey40 = ShopPlyGray600
-val Pink40 = ShopPlyOrange

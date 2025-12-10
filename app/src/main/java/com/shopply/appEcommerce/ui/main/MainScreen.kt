@@ -28,6 +28,7 @@ import androidx.navigation.navArgument
 import com.shopply.appEcommerce.data.local.entities.UserRole
 import com.shopply.appEcommerce.data.repository.UserRepository
 import com.shopply.appEcommerce.ui.admin.AdminStoresScreen
+import com.shopply.appEcommerce.ui.addproduct.AddEditProductScreen
 import com.shopply.appEcommerce.ui.cart.CartScreen
 import com.shopply.appEcommerce.ui.favorites.FavoritesScreen
 import com.shopply.appEcommerce.ui.home.HomeScreen
@@ -144,9 +145,47 @@ fun MainNavHost(
                 StoreScreen(
                     onProductClick = { productId ->
                         navController.navigate(Screen.ProductDetail.createRoute(productId.toString()))
+                    },
+                    onAddProductClick = {
+                        navController.navigate("add_product")
+                    },
+                    onEditProductClick = { productId ->
+                        navController.navigate("edit_product/$productId")
                     }
                 )
             }
+        }
+
+        // AGREGAR PRODUCTO (solo vendedores)
+        composable("add_product") {
+            AddEditProductScreen(
+                productId = null,
+                onBackClick = { navController.popBackStack() },
+                onProductSaved = { productId ->
+                    navController.navigate(Screen.ProductDetail.createRoute(productId.toString())) {
+                        popUpTo(Screen.Store.route)
+                    }
+                }
+            )
+        }
+
+        // EDITAR PRODUCTO (solo vendedores)
+        composable(
+            route = "edit_product/{productId}",
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getLong("productId") ?: 0L
+            AddEditProductScreen(
+                productId = productId,
+                onBackClick = { navController.popBackStack() },
+                onProductSaved = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         // Pantalla de Admin (solo para administradores)

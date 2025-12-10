@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-
 // Entidad Product - Productos del catálogo
 
  // Los vendedores publican productos en sus tiendas
@@ -45,11 +44,31 @@ data class Product(
     val name: String,
     val description: String,
     val price: Double,
-    val imageUrl: String? = null,
+
+    /**
+     * URL de la imagen del producto
+     *
+     * Soporta DOS tipos de imágenes:
+     *
+     * 1. URLs externas (para productos de prueba):
+     *    "https://images.unsplash.com/photo-123/image.jpg"
+     *    - ✅ Gratis, sin Firebase Storage
+     *    - ✅ APK más ligero
+     *    - ⚠️ Requiere internet
+     *
+     * 2. Rutas locales (para productos del vendedor):
+     *    "file:///data/data/com.shopply.appEcommerce/files/product_images/abc.jpg"
+     *    - ✅ Guardadas con LocalStorageService
+     *    - ✅ Funciona offline
+     *    - ✅ Sin costos de Firebase
+     *
+     * Coil (AsyncImage) maneja automáticamente ambos tipos.
+     */
+    val imageUrl: String = "",
 
     // Inventario
     val stock: Int = 0,
-    val isActive: Boolean = true, // Vendedor puede desactivar productos
+    val isActive: Boolean = true,
 
     // Timestamps
     val createdAt: Long = System.currentTimeMillis(),

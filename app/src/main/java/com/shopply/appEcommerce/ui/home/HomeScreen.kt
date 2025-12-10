@@ -1,5 +1,6 @@
 package com.shopply.appEcommerce.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,10 +48,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.shopply.appEcommerce.R
 
 
 /**
@@ -80,21 +85,16 @@ fun HomeScreen(
                             modifier = Modifier
                                 .size(40.dp)
                                 .background(
-                                    brush = Brush.linearGradient(
-                                        colors = listOf(
-                                            MaterialTheme.colorScheme.primary,
-                                            MaterialTheme.colorScheme.tertiary
-                                        )
-                                    ),
+                                    color = Color.White,
                                     shape = RoundedCornerShape(12.dp)
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.ShoppingBag,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
+                            Image(
+                                painter = painterResource(id = R.drawable.icon),
+                                contentDescription = "Icon ShopPly",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.size(32.dp)
                             )
                         }
                         Spacer(modifier = Modifier.width(12.dp))
@@ -276,7 +276,6 @@ private fun GreetingSection(userName: String) {
                     .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Avatar con gradiente
                 Box(
                     modifier = Modifier
                         .size(56.dp)
@@ -314,7 +313,7 @@ private fun GreetingSection(userName: String) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "¿Qué quieres comprar hoy? 🛍️",
+                        text = "¿Qué quieres comprar hoy?",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
@@ -363,15 +362,25 @@ private fun PromotionalBanners() {
 
 @Composable
 private fun PromotionalBanner(index: Int) {
+    // Gradientes usando colores del tema
     val gradients = listOf(
         Brush.horizontalGradient(
-            colors = listOf(Color(0xFFFF6B6B), Color(0xFFFF8E53))
+            colors = listOf(
+                MaterialTheme.colorScheme.error,
+                MaterialTheme.colorScheme.tertiary
+            )
         ),
         Brush.horizontalGradient(
-            colors = listOf(Color(0xFF4E54C8), Color(0xFF8F94FB))
+            colors = listOf(
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.primaryContainer
+            )
         ),
         Brush.horizontalGradient(
-            colors = listOf(Color(0xFF00B4DB), Color(0xFF0083B0))
+            colors = listOf(
+                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.secondaryContainer
+            )
         )
     )
 
@@ -591,7 +600,7 @@ private fun ProductCard(
         )
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Imagen del producto (placeholder)
+            // Imagen del producto
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -602,11 +611,15 @@ private fun ProductCard(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingBag,
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(170.dp),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.icon),
+                    error = painterResource(id = R.drawable.icon)
                 )
 
                 if (isOffer) {
@@ -615,7 +628,7 @@ private fun ProductCard(
                             .align(Alignment.TopEnd)
                             .padding(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFFF3B30)
+                            containerColor = MaterialTheme.colorScheme.error
                         ),
                         shape = RoundedCornerShape(12.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -624,7 +637,7 @@ private fun ProductCard(
                             text = "-15%",
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                             style = MaterialTheme.typography.labelMedium,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onError,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -677,7 +690,7 @@ private fun ProductCard(
                         imageVector = Icons.Default.Star,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color(0xFFFFB800)
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(

@@ -9,10 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.shopply.appEcommerce.R
 
 /**
  * ProductDetailScreen - Pantalla de detalles del producto
@@ -148,21 +151,23 @@ private fun ProductDetailContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // Imagen del producto (placeholder por ahora)
+        // Imagen del producto
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
             color = MaterialTheme.colorScheme.surfaceVariant
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.Default.Image,
-                    contentDescription = null,
-                    modifier = Modifier.size(120.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
-                )
-            }
+            AsyncImage(
+                model = product.imageUrl,
+                contentDescription = product.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.icon),
+                error = painterResource(id = R.drawable.icon)
+            )
         }
 
         Column(
@@ -222,7 +227,7 @@ private fun ProductDetailContent(
                 }
             }
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Precio
             Row(
@@ -235,27 +240,6 @@ private fun ProductDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Mostrar precio con descuento simulado (opcional)
-                if (product.stock > 10) {
-                    Text(
-                        text = "S/ ${String.format("%.2f", product.price * 1.2)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textDecoration = TextDecoration.LineThrough,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                    Surface(
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = "16% OFF",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
             }
 
             // Stock disponible
@@ -280,7 +264,7 @@ private fun ProductDetailContent(
                 )
             }
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Descripción
             Text(
@@ -294,7 +278,7 @@ private fun ProductDetailContent(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
             )
 
-            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Selector de cantidad
             if (product.stock > 0) {
