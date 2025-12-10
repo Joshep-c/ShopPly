@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -28,14 +30,11 @@ import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.RemoveShoppingCart
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -51,9 +50,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -65,13 +64,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
@@ -486,76 +485,121 @@ private fun ProductCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    OutlinedCard(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp,
+            pressedElevation = 3.dp,
+            hoveredElevation = 2.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = MaterialTheme.shapes.large // 12dp del theme
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Imagen del producto
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = product.imageUrl,
-                    contentDescription = product.name,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(MaterialTheme.shapes.medium),
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.icon),
-                    error = painterResource(id = R.drawable.icon)
+            // Imagen del producto con diseño mejorado
+            Card(
+                modifier = Modifier.size(90.dp),
+                shape = MaterialTheme.shapes.medium, // 10dp del theme
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = product.imageUrl,
+                        contentDescription = product.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(id = R.drawable.icon),
+                        error = painterResource(id = R.drawable.icon)
+                    )
+
+                    // Overlay sutil si está pausado
+                    if (!product.isActive) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Pause,
+                                contentDescription = "Pausado",
+                                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    }
+                }
             }
 
             // Información del producto
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                // Nombre del producto
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
+                // Precio destacado con el color primario del theme
                 Text(
                     text = "S/ ${String.format("%.2f", product.price)}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    ),
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                // Chips de estado
+                // Chips de estado con colores del theme
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Stock chip
-                    StockChip(stock = product.stock)
+                    StockChipThemed(stock = product.stock)
 
                     // Status chip
-                    StatusChip(isActive = product.isActive, stock = product.stock)
+                    StatusChipThemed(isActive = product.isActive, stock = product.stock)
                 }
             }
 
-            // Menú contextual
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, "Opciones")
+            // Menú contextual con mejor integración
+            Box(
+                modifier = Modifier.offset(x = 4.dp, y = (-4).dp)
+            ) {
+                IconButton(
+                    onClick = { showMenu = true },
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "Opciones",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 ProductActionsMenu(
@@ -584,91 +628,103 @@ private fun ProductCard(
     }
 }
 
+// Chip de stock usando colores del theme de ShopPly
 @Composable
-private fun StockChip(stock: Int) {
-    val (text, containerColor, contentColor) = when {
+private fun StockChipThemed(stock: Int) {
+    val (backgroundColor, contentColor, icon) = when {
         stock == 0 -> Triple(
-            "Sin stock",
             MaterialTheme.colorScheme.errorContainer,
-            MaterialTheme.colorScheme.error
+            MaterialTheme.colorScheme.onErrorContainer,
+            Icons.Default.Close
         )
-        stock < 5 -> Triple(
-            "Stock: $stock",
+        stock < 10 -> Triple(
             MaterialTheme.colorScheme.tertiaryContainer,
-            MaterialTheme.colorScheme.onTertiaryContainer
+            MaterialTheme.colorScheme.onTertiaryContainer,
+            Icons.Default.Warning
         )
         else -> Triple(
-            "Stock: $stock",
             MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer
+            MaterialTheme.colorScheme.onSecondaryContainer,
+            Icons.Default.CheckCircle
         )
     }
 
-    AssistChip(
-        onClick = { },
-        label = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelSmall
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Inventory,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp)
-            )
-        },
-        colors = AssistChipDefaults.assistChipColors(
-            containerColor = containerColor,
-            labelColor = contentColor,
-            leadingIconContentColor = contentColor
-        )
-    )
-}
-
-@Composable
-private fun StatusChip(isActive: Boolean, stock: Int) {
-    val (text, icon, color) = when {
-        stock == 0 -> Triple(
-            "Agotado",
-            Icons.Default.RemoveShoppingCart,
-            MaterialTheme.colorScheme.error
-        )
-        !isActive -> Triple(
-            "Pausado",
-            Icons.Default.Pause,
-            MaterialTheme.colorScheme.tertiary
-        )
-        else -> Triple(
-            "Activo",
-            Icons.Default.CheckCircle,
-            MaterialTheme.colorScheme.secondary
-        )
-    }
-
-    AssistChip(
-        onClick = { },
-        label = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelSmall
-            )
-        },
-        leadingIcon = {
+    Surface(
+        shape = MaterialTheme.shapes.small, // 8dp del theme
+        color = backgroundColor
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                tint = contentColor,
+                modifier = Modifier.size(12.dp)
             )
-        },
-        colors = AssistChipDefaults.assistChipColors(
-            containerColor = color.copy(alpha = 0.1f),
-            labelColor = color,
-            leadingIconContentColor = color
-        )
-    )
+            Text(
+                text = "$stock",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = contentColor
+            )
+        }
+    }
 }
+
+// Chip de estado usando colores del theme de ShopPly
+@Composable
+private fun StatusChipThemed(isActive: Boolean, stock: Int) {
+    val (backgroundColor, contentColor, text) = when {
+        stock == 0 -> Triple(
+            MaterialTheme.colorScheme.errorContainer,
+            MaterialTheme.colorScheme.error,
+            "Agotado"
+        )
+        !isActive -> Triple(
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurfaceVariant,
+            "Pausado"
+        )
+        else -> Triple(
+            MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.secondary,
+            "Activo"
+        )
+    }
+
+    Surface(
+        shape = MaterialTheme.shapes.small, // 8dp del theme
+        color = backgroundColor
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Indicador circular de estado
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .background(
+                        color = contentColor,
+                        shape = CircleShape
+                    )
+            )
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = contentColor
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun ProductActionsMenu(
