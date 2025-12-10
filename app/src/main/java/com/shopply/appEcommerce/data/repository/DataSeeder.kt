@@ -15,14 +15,16 @@ import javax.inject.Singleton
  * - 2 Vendedores con tiendas
  * - 1 Comprador
  * - 8 Categorías
- * - 8 Productos de ejemplo
+ * - 20 Productos de ejemplo
+ * - Favoritos de prueba
  */
 @Singleton
 class DataSeeder @Inject constructor(
     private val userRepository: UserRepository,
     private val storeRepository: StoreRepository,
     private val categoryRepository: CategoryRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val favoriteRepository: FavoriteRepository
 ) {
 
     /**
@@ -47,6 +49,9 @@ class DataSeeder @Inject constructor(
 
         // 4. Crear productos
         createTestProducts()
+
+        // 5. Crear favoritos de prueba
+        createTestFavorites()
     }
 
     /**
@@ -372,6 +377,24 @@ class DataSeeder @Inject constructor(
 
         products.forEach { product ->
             productRepository.createProduct(product)
+        }
+    }
+
+    /**
+     * Crear favoritos de prueba para el comprador
+     */
+    private suspend fun createTestFavorites() {
+        val buyerUserId = 4L // Carlos Mendoza (comprador)
+
+        // Agregar algunos productos como favoritos del comprador
+        // Productos: 1, 2, 5, 11, 13, 16
+        val favoriteProductIds = listOf(1L, 2L, 5L, 11L, 13L, 16L)
+
+        favoriteProductIds.forEach { productId ->
+            favoriteRepository.addToFavorites(
+                userId = buyerUserId,
+                productId = productId
+            )
         }
     }
 }

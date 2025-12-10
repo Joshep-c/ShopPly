@@ -112,13 +112,15 @@ object RepositoryModule {
         userRepository: UserRepository,
         storeRepository: StoreRepository,
         categoryRepository: CategoryRepository,
-        productRepository: ProductRepository
+        productRepository: ProductRepository,
+        favoriteRepository: FavoriteRepository
     ): DataSeeder {
         return DataSeeder(
             userRepository,
             storeRepository,
             categoryRepository,
-            productRepository
+            productRepository,
+            favoriteRepository
         )
     }
 
