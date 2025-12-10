@@ -5,13 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.shopply.appEcommerce.data.local.database.DatabaseInitializer
 import com.shopply.appEcommerce.ui.navigation.NavGraph
@@ -76,18 +72,19 @@ class MainActivity : ComponentActivity() {
 
             if (isDebugMode) {
                 databaseInitializer.showDatabaseSummary()
->>>>>>> origin/feature/bd-room
             }
         }
     }
 }
 
- // MainContent - Composable que gestiona los diferentes estados de la app
-
- // Estados:
- // - Loading -> Mostrar SplashScreen
- // - Authenticated -> Navegar a HomeScreen
- // - Unauthenticated -> Mostrar AuthScreen (bienvenida y login)
+/**
+ * MainContent - Composable que gestiona los diferentes estados de la app
+ *
+ * Estados:
+ * - Loading -> Mostrar SplashScreen
+ * - Authenticated -> Navegar a HomeScreen
+ * - Unauthenticated -> Mostrar AuthScreen (bienvenida y login)
+ */
 
 @Composable
 private fun MainContent(
