@@ -2,16 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
     namespace = "com.shopply.appEcommerce"
-    compileSdk = 36
+    compileSdk = 35  // Cambio: 36 aún no es estable
 
     defaultConfig {
         applicationId = "com.shopply.appEcommerce"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35  // Cambio: sincronizado con compileSdk
         versionCode = 1
         versionName = "1.0"
 
@@ -27,38 +29,61 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
 }
 
 dependencies {
-
-    // Module dependencies
-    implementation(project(":core"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":feature-catalog"))
-
-    implementation("androidx.compose.ui:ui:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-
+    // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended:1.7.2")
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Google Play Services
+    implementation(libs.play.services.auth)
+
+    // Security - BCrypt para hashing de contraseñas
+    implementation("org.mindrot:jbcrypt:0.4")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
