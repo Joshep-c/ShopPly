@@ -314,7 +314,7 @@ private fun ErrorState(
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
-                text = "❌",
+                text = "x",
                 style = MaterialTheme.typography.displayLarge
             )
             Text(
