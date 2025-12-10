@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
@@ -69,6 +68,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
 import com.shopply.appEcommerce.data.local.entities.Product
+import com.shopply.appEcommerce.ui.components.FavoriteButton
 
 /**
  * FavoritesScreen - Pantalla de productos favoritos
@@ -420,30 +420,17 @@ private fun FavoriteProductCard(
                             )
                     )
 
-                    // Botón de eliminar favorito
-                    Surface(
+                    // Botón de eliminar favorito usando el componente reutilizable
+                    FavoriteButton(
+                        isFavorite = true,
+                        onClick = {
+                            showRemoveAnimation = false
+                            onRemoveFavorite()
+                        },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(8.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-                        shadowElevation = 4.dp
-                    ) {
-                        IconButton(
-                            onClick = {
-                                showRemoveAnimation = false
-                                onRemoveFavorite()
-                            },
-                            modifier = Modifier.size(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = "Eliminar de favoritos",
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
+                            .padding(8.dp)
+                    )
 
                     // Badge de stock
                     if (product.stock < 10) {

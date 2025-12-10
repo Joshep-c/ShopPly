@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
+import com.shopply.appEcommerce.ui.components.FavoriteButton
 
 /**
  * ProductDetailScreen - Pantalla de detalles del producto
@@ -188,13 +189,12 @@ private fun ProductDetailContent(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = onToggleFavorite) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = if (isFavorite) "Quitar de favoritos" else "Agregar a favoritos",
-                        tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                    )
-                }
+
+                // Botón de favoritos usando el componente reutilizable
+                FavoriteButton(
+                    isFavorite = isFavorite,
+                    onClick = onToggleFavorite
+                )
             }
 
             // Información de la tienda
