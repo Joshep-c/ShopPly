@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.RemoveShoppingCart
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -67,11 +66,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.shopply.appEcommerce.R
 import com.shopply.appEcommerce.data.local.entities.Product
 
 /**
@@ -111,11 +114,6 @@ fun StoreScreen(
                             imageVector = if (showSearchBar) Icons.Default.Close else Icons.Default.Search,
                             contentDescription = if (showSearchBar) "Cerrar búsqueda" else "Buscar"
                         )
-                    }
-
-                    // Botón de configuración (futuro)
-                    IconButton(onClick = { /* TODO: Settings */ }) {
-                        Icon(Icons.Default.Settings, "Configuración")
                     }
                 }
             )
@@ -501,7 +499,7 @@ private fun ProductCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Imagen del producto (placeholder con icono)
+            // Imagen del producto
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -509,11 +507,15 @@ private fun ProductCard(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingBag,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.icon),
+                    error = painterResource(id = R.drawable.icon)
                 )
             }
 

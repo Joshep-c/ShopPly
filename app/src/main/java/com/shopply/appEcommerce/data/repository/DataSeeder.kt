@@ -136,18 +136,14 @@ class DataSeeder @Inject constructor(
     /**
      * Crear productos de prueba
      *
-     * NOTA: Todos usan URLs de Unsplash (externas) para el MVP
+     * NOTA: Todos usan URLs de Unsplash (externas)
      * Esto permite:
-     * - ✅ Descarga más rápida del APK (no incluye imágenes)
-     * - ✅ Menor tamaño de la app
-     * - ✅ Funciona sin Firebase Storage (gratis)
-     *
-     * Los vendedores podrán agregar productos con imágenes locales
-     * (guardadas en el dispositivo con LocalStorageService)
+     * - Descarga más rápida del APK
+     * - Menor tamaño de la app
      */
     private suspend fun createTestProducts() {
         val products = listOf(
-            // ========== TECH AREQUIPA (storeId = 1) - ELECTRÓNICA ==========
+            // TECH AREQUIPA (storeId = 1) - ELECTRÓNICA
 
             Product(
                 storeId = 1,
@@ -157,7 +153,7 @@ class DataSeeder @Inject constructor(
                         "Pantalla 15.6\" Full HD, Windows 11. Ideal para trabajo y estudios.",
                 price = 2499.00,
                 stock = 15,
-                imageUrl = "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop",
+                imageUrl = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
@@ -212,7 +208,7 @@ class DataSeeder @Inject constructor(
                         "corrección de luz, micrófono estéreo. Ideal para videollamadas y streaming.",
                 price = 249.00,
                 stock = 25,
-                imageUrl = "https://images.unsplash.com/photo-1589878844999-38c6a9f7be1d?w=500&h=500&fit=crop",
+                imageUrl = "https://m.media-amazon.com/images/I/71YN85pLGcL._AC_SL1500_.jpg",
                 isActive = true
             ),
             Product(
@@ -256,7 +252,7 @@ class DataSeeder @Inject constructor(
                         "escritura 2900MB/s. Acelera tu PC hasta 10x más rápido.",
                 price = 329.00,
                 stock = 40,
-                imageUrl = "https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=500&h=500&fit=crop",
+                imageUrl = "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=500&h=500&fit=crop",
                 isActive = true
             ),
 
@@ -292,7 +288,7 @@ class DataSeeder @Inject constructor(
                         "Medidas: 1.5m x 2m. Perfecta para decoración o abrigo.",
                 price = 180.00,
                 stock = 8,
-                imageUrl = "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&h=500&fit=crop",
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd-1icQanG9W-paUq1O94mq1vDFiRNldLFvg&s",
                 isActive = true
             ),
             Product(
@@ -303,7 +299,7 @@ class DataSeeder @Inject constructor(
                         "Diseños geométricos coloridos, cierre con cremallera, 35x30cm.",
                 price = 75.00,
                 stock = 30,
-                imageUrl = "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&h=500&fit=crop",
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScNeIW6ExHxO68bwRccQ2pIhAQnIKg6LmfFA&s",
                 isActive = true
             ),
             Product(
@@ -314,7 +310,7 @@ class DataSeeder @Inject constructor(
                         "Diseños incas, chakanas y símbolos andinos. 80x120cm.",
                 price = 350.00,
                 stock = 5,
-                imageUrl = "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=500&h=500&fit=crop",
+                imageUrl = "https://images1.novica.net/pictures/4/p444989_1.jpg",
                 isActive = true
             ),
             Product(
@@ -325,7 +321,7 @@ class DataSeeder @Inject constructor(
                         "Grano selecto, tueste medio, cultivo orgánico, notas achocolatadas.",
                 price = 38.00,
                 stock = 100,
-                imageUrl = "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&h=500&fit=crop",
+                imageUrl = "https://cafevalenzuela.com.pe/wp-content/uploads/2021/06/CAFE-EXPRESS.jpg",
                 isActive = true
             ),
             Product(
@@ -336,7 +332,7 @@ class DataSeeder @Inject constructor(
                         "Sin aditivos, propiedades antibacterianas, envase de vidrio.",
                 price = 42.00,
                 stock = 60,
-                imageUrl = "https://images.unsplash.com/photo-1587049352846-4a222e784046?w=500&h=500&fit=crop",
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_50eUHoUc1eRRWHgYr9JTossfGs8wBqH0GA&s",
                 isActive = true
             ),
             Product(
@@ -369,7 +365,7 @@ class DataSeeder @Inject constructor(
                         "Arte amazónico peruano, pintado a mano, 25cm altura.",
                 price = 95.00,
                 stock = 15,
-                imageUrl = "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&h=500&fit=crop",
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyrkWIO3gvwmLN2Qha7JNC6gmdvynLGt8cJw&s",
                 isActive = true
             )
         )

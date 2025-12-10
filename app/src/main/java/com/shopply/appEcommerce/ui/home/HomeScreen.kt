@@ -54,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
 
 
@@ -599,7 +600,7 @@ private fun ProductCard(
         )
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Imagen del producto (placeholder)
+            // Imagen del producto
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -610,11 +611,15 @@ private fun ProductCard(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingBag,
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(170.dp),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.icon),
+                    error = painterResource(id = R.drawable.icon)
                 )
 
                 if (isOffer) {
