@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-
 // Entidad Product - Productos del catálogo
 
  // Los vendedores publican productos en sus tiendas
@@ -45,11 +44,11 @@ data class Product(
     val name: String,
     val description: String,
     val price: Double,
-    val imageUrl: String? = null,
+    val imageUrl: String = "",
 
     // Inventario
     val stock: Int = 0,
-    val isActive: Boolean = true, // Vendedor puede desactivar productos
+    val isActive: Boolean = true,
 
     // Timestamps
     val createdAt: Long = System.currentTimeMillis(),

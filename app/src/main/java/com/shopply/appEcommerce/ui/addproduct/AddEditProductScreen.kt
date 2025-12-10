@@ -319,23 +319,23 @@ private fun ImageSection() {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Imágenes del Producto*",
+            text = "Imagen del Producto*",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = "Agrega hasta 5 imágenes de tu producto",
+            text = "Agrega una imagen representativa de tu producto",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // Placeholder para agregar imágenes
+        // Placeholder para agregar imagen
         OutlinedCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            onClick = { /* TODO: Abrir selector de imágenes */ }
+            onClick = { /* TODO: Abrir selector de imagen */ }
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -352,13 +352,8 @@ private fun ImageSection() {
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Toca para agregar imágenes",
+                        text = "Toca para agregar imagen",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "1 Imágen",
-                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
