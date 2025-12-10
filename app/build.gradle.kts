@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -80,8 +81,30 @@ dependencies {
     // Google Play Services
     implementation(libs.play.services.auth)
 
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // Coil para cargar imágenes
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Gson para JSON
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Accompanist Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
+    // CameraX para tomar fotos
+    implementation("androidx.camera:camera-core:1.3.1")
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+
     // Security - BCrypt para hashing de contraseñas
     implementation("org.mindrot:jbcrypt:0.4")
+
 
     // Testing
     testImplementation(libs.junit)

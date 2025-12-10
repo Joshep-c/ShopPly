@@ -5,19 +5,27 @@ ksp = "2.0.20-1.0.25"
 hilt = "2.52"
 coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"  # Actualizado
-espressoCore = "3.6.1"  # Actualizado
-lifecycleRuntimeKtx = "2.8.7"  # Actualizado
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.11.00"  # Actualizado
-appcompat = "1.7.0"  # Actualizado
-material = "1.12.0"  # Actualizado
-playServicesAuth = "21.2.0"  # Ajustado
+composeBom = "2024.11.00"
+appcompat = "1.7.0"
+material = "1.12.0"
+playServicesAuth = "21.2.0"
 room = "2.6.1"
 datastore = "1.1.1"
-navigation = "2.8.4"  # Actualizado
+navigation = "2.8.4"
 hiltNavigation = "1.2.0"
-coroutines = "1.9.0"  # Actualizado
+coroutines = "1.9.0"
+# Firebase
+firebaseBom = "32.7.4"
+googleServices = "4.4.2"
+# Imágenes y Utils
+coil = "2.5.0"
+gson = "2.10.1"
+accompanist = "0.32.0"
+camerax = "1.3.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +65,27 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 # Coroutines
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
+
+# Coil
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# Gson
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+# Accompanist
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+
+# CameraX
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -64,3 +93,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 android-library = { id = "com.android.library", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
