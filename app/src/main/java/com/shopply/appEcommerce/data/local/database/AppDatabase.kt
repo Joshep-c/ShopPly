@@ -34,7 +34,7 @@ import com.shopply.appEcommerce.data.local.entities.User
         CartItem::class,
         Favorite::class
     ],
-    version = 2,
+    version = 3, // Incrementado por cambio en Product.kt
     exportSchema = false
 )
 @TypeConverters(Converters::class)

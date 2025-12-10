@@ -135,10 +135,20 @@ class DataSeeder @Inject constructor(
 
     /**
      * Crear productos de prueba
+     *
+     * NOTA: Todos usan URLs de Unsplash (externas) para el MVP
+     * Esto permite:
+     * - ✅ Descarga más rápida del APK (no incluye imágenes)
+     * - ✅ Menor tamaño de la app
+     * - ✅ Funciona sin Firebase Storage (gratis)
+     *
+     * Los vendedores podrán agregar productos con imágenes locales
+     * (guardadas en el dispositivo con LocalStorageService)
      */
     private suspend fun createTestProducts() {
         val products = listOf(
-            // PRODUCTOS DE TECH AREQUIPA (storeId = 1)
+            // ========== TECH AREQUIPA (storeId = 1) - ELECTRÓNICA ==========
+
             Product(
                 storeId = 1,
                 categoryId = 1, // Electrónica
@@ -147,7 +157,18 @@ class DataSeeder @Inject constructor(
                         "Pantalla 15.6\" Full HD, Windows 11. Ideal para trabajo y estudios.",
                 price = 2499.00,
                 stock = 15,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "MacBook Air M2 2023",
+                description = "MacBook Air con chip M2, 8GB RAM unificada, 256GB SSD, " +
+                        "pantalla Retina 13.6\", batería 18 horas. Ultraligero 1.24kg.",
+                price = 4299.00,
+                stock = 8,
+                imageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
@@ -158,7 +179,7 @@ class DataSeeder @Inject constructor(
                         "sensor de 4000 DPI, batería recargable USB-C, compatible con Windows y Mac.",
                 price = 299.00,
                 stock = 30,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
@@ -169,7 +190,7 @@ class DataSeeder @Inject constructor(
                         "personalizable, 104 teclas, anti-ghosting, cable USB trenzado.",
                 price = 189.00,
                 stock = 20,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
@@ -180,53 +201,175 @@ class DataSeeder @Inject constructor(
                         "batería de 30 horas, carga rápida, audio Hi-Res, asistente de voz.",
                 price = 899.00,
                 stock = 12,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "Webcam Logitech C920 Full HD",
+                description = "Cámara web 1080p a 30fps, enfoque automático, " +
+                        "corrección de luz, micrófono estéreo. Ideal para videollamadas y streaming.",
+                price = 249.00,
+                stock = 25,
+                imageUrl = "https://images.unsplash.com/photo-1589878844999-38c6a9f7be1d?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "Monitor LG UltraWide 29\"",
+                description = "Monitor IPS 29\" 2560x1080, FreeSync 75Hz, " +
+                        "HDR10, entrada HDMI/DisplayPort. Perfecto para productividad.",
+                price = 899.00,
+                stock = 10,
+                imageUrl = "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "Tablet Samsung Galaxy Tab S8",
+                description = "Tablet Android 11\", pantalla AMOLED 120Hz, " +
+                        "S Pen incluido, 8GB RAM, 128GB. Ideal para diseño y entretenimiento.",
+                price = 1899.00,
+                stock = 15,
+                imageUrl = "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "Smartwatch Apple Watch Series 8",
+                description = "Reloj inteligente con GPS, monitor de salud, " +
+                        "pantalla always-on, resistente al agua, batería 18 horas.",
+                price = 1699.00,
+                stock = 20,
+                imageUrl = "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 1,
+                categoryId = 1, // Electrónica
+                name = "Disco SSD Kingston 1TB NVMe",
+                description = "SSD M.2 NVMe Gen 3, velocidad lectura 3500MB/s, " +
+                        "escritura 2900MB/s. Acelera tu PC hasta 10x más rápido.",
+                price = 329.00,
+                stock = 40,
+                imageUrl = "https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=500&h=500&fit=crop",
                 isActive = true
             ),
 
-            // PRODUCTOS DE ARTESANÍA AREQUIPEÑA (storeId = 2)
+            // ========== ARTESANÍA AREQUIPEÑA (storeId = 2) ==========
+
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
-                name = "Chompa de Vicuña Natural",
-                description = "Chompa tejida a mano con lana de vicuña 100% natural. " +
-                        "Diseños tradicionales andinos, suave y abrigadora. Tallas disponibles: S, M, L, XL.",
+                name = "Chompa de Alpaca Natural",
+                description = "Chompa tejida a mano con lana de alpaca 100% natural. " +
+                        "Diseños tradicionales andinos, suave y abrigadora. Tallas: S, M, L, XL.",
                 price = 250.00,
                 stock = 12,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
                 name = "Sombrero Arequipeño Tradicional",
-                description = "Sombrero tradicional peruano tejido fibras vegetales. " +
+                description = "Sombrero tradicional peruano tejido con fibras vegetales. " +
                         "Lana de oveja y alpaca, colores vivos, orejeras incluidas.",
                 price = 45.00,
                 stock = 50,
-                imageUrl = null,
-                isActive = true
-            ),
-            Product(
-                storeId = 2,
-                categoryId = 4, // Alimentos
-                name = "Café Orgánico de Valenzuela 500g",
-                description = "Café premium de selección nacional elaborado en Arequipa" +
-                        "Grano selecto, tueste medio, cultivo orgánico, notas achocolatadas y frutales.",
-                price = 38.00,
-                stock = 100,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1529958030586-3aae4ca485ff?w=500&h=500&fit=crop",
                 isActive = true
             ),
             Product(
                 storeId = 2,
                 categoryId = 5, // Artesanía
-                name = "Poncho Andinno Multicolor",
-                description = "Poncho tejida con diseños tradicionales, 100% lana de vicuña. " +
-                        "Medidas: 1.5m x 2m. Perfecta para decoración o abrigo. Hecha en telar tradicional.",
+                name = "Poncho Andino Multicolor",
+                description = "Poncho tejido con diseños tradicionales, 100% lana de alpaca. " +
+                        "Medidas: 1.5m x 2m. Perfecta para decoración o abrigo.",
                 price = 180.00,
                 stock = 8,
-                imageUrl = null,
+                imageUrl = "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 5, // Artesanía
+                name = "Bolso Artesanal de Aguayo",
+                description = "Bolso tejido a mano con tela aguayo tradicional peruana. " +
+                        "Diseños geométricos coloridos, cierre con cremallera, 35x30cm.",
+                price = 75.00,
+                stock = 30,
+                imageUrl = "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 5, // Artesanía
+                name = "Tapiz Decorativo Andino",
+                description = "Tapiz tejido en telar tradicional, 100% lana de oveja. " +
+                        "Diseños incas, chakanas y símbolos andinos. 80x120cm.",
+                price = 350.00,
+                stock = 5,
+                imageUrl = "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 4, // Alimentos
+                name = "Café Orgánico Arequipeño 500g",
+                description = "Café premium 100% arábica de selección nacional. " +
+                        "Grano selecto, tueste medio, cultivo orgánico, notas achocolatadas.",
+                price = 38.00,
+                stock = 100,
+                imageUrl = "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 4, // Alimentos
+                name = "Miel de Abeja Pura 1kg",
+                description = "Miel 100% natural de abejas de la sierra peruana. " +
+                        "Sin aditivos, propiedades antibacterianas, envase de vidrio.",
+                price = 42.00,
+                stock = 60,
+                imageUrl = "https://images.unsplash.com/photo-1587049352846-4a222e784046?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 4, // Alimentos
+                name = "Quinua Orgánica Premium 1kg",
+                description = "Quinua blanca certificada orgánica del altiplano peruano. " +
+                        "Alta en proteínas, sin gluten, superalimento ancestral.",
+                price = 28.00,
+                stock = 80,
+                imageUrl = "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 4, // Alimentos
+                name = "Chocolate Orgánico 70% Cacao",
+                description = "Chocolate artesanal peruano con 70% cacao orgánico. " +
+                        "Sabor intenso, sin azúcar refinada, barra de 100g.",
+                price = 18.00,
+                stock = 120,
+                imageUrl = "https://images.unsplash.com/photo-1511381939415-e44015466834?w=500&h=500&fit=crop",
+                isActive = true
+            ),
+            Product(
+                storeId = 2,
+                categoryId = 5, // Artesanía
+                name = "Cerámica Decorativa Shipibo",
+                description = "Jarrón de cerámica hecho a mano con diseños Shipibo-Konibo. " +
+                        "Arte amazónico peruano, pintado a mano, 25cm altura.",
+                price = 95.00,
+                stock = 15,
+                imageUrl = "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&h=500&fit=crop",
                 isActive = true
             )
         )
@@ -234,12 +377,5 @@ class DataSeeder @Inject constructor(
         products.forEach { product ->
             productRepository.createProduct(product)
         }
-    }
-
-    /**
-     * Limpiar todos los datos (útil para testing)
-     */
-    suspend fun clearAllData() {
-        // Se puede agregar después si es necesario
     }
 }

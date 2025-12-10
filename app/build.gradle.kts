@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    // Firebase Auth es GRATIS, Storage requiere plan de pago
     id("com.google.gms.google-services")
 }
 
@@ -81,11 +82,16 @@ dependencies {
     // Google Play Services
     implementation(libs.play.services.auth)
 
-    // Firebase
+    // Firebase Auth - GRATIS (incluido en plan Spark)
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase Storage - REQUIERE PLAN BLAZE (pago por uso)
+    // Por ahora usaremos almacenamiento local en el dispositivo
+    // implementation("com.google.firebase:firebase-storage-ktx")
+
+    // Firestore - GRATIS hasta 50k lecturas/día
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
 
     // Coil para cargar imágenes
     implementation("io.coil-kt:coil-compose:2.5.0")

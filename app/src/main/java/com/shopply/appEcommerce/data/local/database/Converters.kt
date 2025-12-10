@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken
 import com.shopply.appEcommerce.data.local.entities.StoreStatus
 import com.shopply.appEcommerce.data.local.entities.UserRole
 
-
 // Converters - Conversores de tipos para Room
 // Convierte tipos personalizados (enums, listas) a tipos que Room puede guardar (String)
 

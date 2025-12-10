@@ -44,6 +44,26 @@ data class Product(
     val name: String,
     val description: String,
     val price: Double,
+
+    /**
+     * URL de la imagen del producto
+     *
+     * Soporta DOS tipos de imágenes:
+     *
+     * 1. URLs externas (para productos de prueba):
+     *    "https://images.unsplash.com/photo-123/image.jpg"
+     *    - ✅ Gratis, sin Firebase Storage
+     *    - ✅ APK más ligero
+     *    - ⚠️ Requiere internet
+     *
+     * 2. Rutas locales (para productos del vendedor):
+     *    "file:///data/data/com.shopply.appEcommerce/files/product_images/abc.jpg"
+     *    - ✅ Guardadas con LocalStorageService
+     *    - ✅ Funciona offline
+     *    - ✅ Sin costos de Firebase
+     *
+     * Coil (AsyncImage) maneja automáticamente ambos tipos.
+     */
     val imageUrl: String = "",
 
     // Inventario
