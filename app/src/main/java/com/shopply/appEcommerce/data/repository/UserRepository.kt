@@ -163,11 +163,64 @@ class UserRepository @Inject constructor(
     }
 
     // GESTIÓN DE PERFIL
-    // Actualizar información del usuario
-    
+    /**
+     * Actualizar información del usuario
+     */
+    suspend fun updateUser(user: User): Result<Unit> {
+        return try {
+            userDao.updateUser(user)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    /**
+     * Actualizar información del perfil (sin cambiar contraseña)
+     */
     suspend fun updateProfile(user: User): Result<Unit> {
         return try {
             userDao.updateUser(user)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    /**
+     * Cambiar contraseña del usuario
+     */
+    suspend fun changePassword(userId: Long, newPassword: String): Result<Unit> {
+        return try {
+            // Validar fortaleza de contraseña
+            val (isValid, errorMessage) = passwordHasher.validatePasswordStrength(newPassword)
+            if (!isValid) {
+                return Result.Error(Exception(errorMessage ?: "Contraseña inválida"))
+            }
+
+            // Hashear nueva contraseña
+            val newPasswordHash = passwordHasher.hashPassword(newPassword)
+
+            // Actualizar contraseña
+            val user = userDao.getUserByIdSync(userId)
+                ?: return Result.Error(Exception("Usuario no encontrado"))
+
+            userDao.updateUser(user.copy(passwordHash = newPasswordHash))
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    /**
+     * Eliminar cuenta de usuario
+     */
+    suspend fun deleteUser(userId: Long): Result<Unit> {
+        return try {
+            val user = userDao.getUserByIdSync(userId)
+                ?: return Result.Error(Exception("Usuario no encontrado"))
+
+            userDao.deleteUser(user)
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)
