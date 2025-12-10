@@ -25,8 +25,6 @@ import com.shopply.appEcommerce.data.local.entities.UserRole
 
 /**
  * ProfileScreen - Pantalla de perfil de usuario
- *
- * Características:
  * - Ver información del perfil
  * - Editar perfil (nombre, email, teléfono)
  * - Cambiar contraseña
@@ -522,7 +520,7 @@ private fun ActionsSection(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Eliminar cuenta (peligroso)
+        // Eliminar cuenta
         OutlinedCard(
             modifier = Modifier.fillMaxWidth(),
             onClick = viewModel::showDeleteAccountDialog,
@@ -683,7 +681,7 @@ private fun DeleteAccountDialog(
                 Text("• Información personal")
                 Text("• Historial de compras/ventas")
                 Text("• Favoritos y carrito")
-                Text("• Productos publicados (si eres vendedor)")
+                Text("• Productos publicados")
 
                 Spacer(modifier = Modifier.height(8.dp))
 
