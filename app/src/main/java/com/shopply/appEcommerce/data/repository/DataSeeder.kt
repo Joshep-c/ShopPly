@@ -208,7 +208,7 @@ class DataSeeder @Inject constructor(
                         "corrección de luz, micrófono estéreo. Ideal para videollamadas y streaming.",
                 price = 249.00,
                 stock = 25,
-                imageUrl = "https://m.media-amazon.com/images/I/71YN85pLGcL._AC_SL1500_.jpg",
+                imageUrl = "https://promart.vteximg.com.br/arquivos/ids/6526436-1000-1000/image-006b18b462b742ea8e7742b6247dff7c.jpg?v=637989425151500000",
                 isActive = true
             ),
             Product(
