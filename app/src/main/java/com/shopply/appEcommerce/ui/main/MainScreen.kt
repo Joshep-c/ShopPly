@@ -174,11 +174,11 @@ fun MainNavHost(
             route = "edit_product/{productId}",
             arguments = listOf(
                 navArgument("productId") {
-                    type = NavType.LongType
+                    type = NavType.StringType
                 }
             )
         ) { backStackEntry ->
-            val productId = backStackEntry.arguments?.getLong("productId") ?: 0L
+            val productId = backStackEntry.arguments?.getString("productId")
             AddEditProductScreen(
                 productId = productId,
                 onBackClick = { navController.popBackStack() },
