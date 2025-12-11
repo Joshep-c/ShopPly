@@ -40,7 +40,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,7 +55,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -76,8 +74,6 @@ fun HomeScreen(
     onProductClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    // Estado del LazyColumn para hacer scroll programático
     val listState = rememberLazyListState()
 
     Scaffold(
@@ -220,7 +216,7 @@ private fun HomeContent(
     // Crear scope para animar el scroll
     val coroutineScope = rememberCoroutineScope()
 
-    // Construir el orden de items: Greeting(0), Banners(1), Categories(2), then one item por categoría
+    // Construir el orden de items: Greeting(0), Banners(1), Categories(2), then one item per categoría
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 16.dp),
@@ -236,30 +232,20 @@ private fun HomeContent(
         item {
             CategoriesSection(categories = categories, onCategoryClick = { categoryId ->
                 // calcular índice objetivo: 3 + indexOfCategory
-                val index = 3 + categories.indexOfFirst { it.id == categoryId }
-                coroutineScope.launch {
-                    listState.animateScrollToItem(index)
+                val catIndex = categories.indexOfFirst { it.id == categoryId }
+                if (catIndex >= 0) {
+                    val targetIndex = 3 + catIndex
+                    coroutineScope.launch {
+                        // animación segura: limitar el índice al rango de items conocidos
+                        val maxCategorySectionIndex = 2 + categories.size // índice del último bloque de categoría
+                        val safeIndex = targetIndex.coerceIn(0, maxCategorySectionIndex)
+                        listState.animateScrollToItem(safeIndex)
+                    }
+                } else {
+                    // Si por alguna razón no se encuentra la categoría, volvemos a la sección de categorías
+                    coroutineScope.launch { listState.animateScrollToItem(2) }
                 }
             })
-        }
-
-        // Secciones por categoría: para cada categoría, mostrar productos filtrados
-        categories.forEach { category ->
-            item {
-                CategoryProductsSection(
-                    category = category,
-                    products = allProducts.filter { it.categoryId == category.id },
-                    onProductClick = onProductClick
-                )
-            }
-        }
-
-        // Productos recomendados reales
-        item {
-            RecommendedProducts(
-                products = recommendedProducts,
-                onProductClick = onProductClick
-            )
         }
 
         // Ofertas especiales reales
@@ -268,6 +254,25 @@ private fun HomeContent(
                 products = specialOffers,
                 onProductClick = onProductClick
             )
+        }
+
+        // Productos recomendados
+        item {
+            RecommendedProducts(
+                products = recommendedProducts,
+                onProductClick = onProductClick
+            )
+        }
+
+        // Secciones por categoría
+        categories.forEach { category ->
+            item {
+                CategoryProductsSection(
+                    category = category,
+                    products = allProducts.filter { it.categoryId == category.id },
+                    onProductClick = onProductClick
+                )
+            }
         }
     }
 }
