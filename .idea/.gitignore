@@ -15,3 +15,37 @@ tasks.xml
 usage.statistics.xml
 dictionaries/
 caches/
+# ============================
+#   ANDROID STUDIO / INTELLIJ
+# ============================
+
+# User-specific and volatile files
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Android Studio generated files
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Project view/local settings
+.idea/gradle.xml
+.idea/vcs.xml
+.idea/compiler.xml
+
+# Build, run, and device configs
+.idea/deploymentTargetDropDown.xml
+.idea/deploymentTargetSelector.xml
+.idea/misc.xml
+.idea/.name
+
+# Misc IntelliJ files
+*.iml
+
+# JetBrains
+out/
