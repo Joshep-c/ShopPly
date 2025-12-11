@@ -244,31 +244,36 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 isProcessingPayment = true
-                val userId = currentUserId ?: return@launch
+                val userId = currentUserId ?: run {
+                    isProcessingPayment = false
+                    hideCheckoutDialog()
+                    showMessage("Usuario no autenticado")
+                    return@launch
+                }
 
                 // 1. Validar stock de todos los items
                 when (val result = cartRepository.validateCartStock(userId)) {
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
                             // Hay problemas de stock
-                            showMessage("Algunos productos no están disponibles: ${result.data.joinToString()}")
                             isProcessingPayment = false
                             hideCheckoutDialog()
+                            showMessage("Algunos productos no están disponibles: ${result.data.joinToString()}")
                             return@launch
                         }
                     }
                     is Result.Error -> {
-                        showMessage("Error al validar stock")
                         isProcessingPayment = false
                         hideCheckoutDialog()
+                        showMessage("Error al validar stock")
                         return@launch
                     }
                 }
 
-                // 2. Simular procesamiento de pago (en producción: integrar pasarela)
-                kotlinx.coroutines.delay(2000) // Simular 2 segundos de procesamiento
+                // 2. Simular procesamiento de pago (3 segundos)
+                kotlinx.coroutines.delay(3000)
 
-                // 3. Reducir stock de productos (simular venta completada)
+                // 3. Reducir stock de productos (operación de BD)
                 cartItems.forEach { item ->
                     val product = item.product
                     val newStock = product.stock - item.cartItem.quantity
@@ -281,15 +286,28 @@ class CartViewModel @Inject constructor(
                 }
 
                 // 4. Vaciar carrito
-                cartRepository.clearCart(userId)
+                when (cartRepository.clearCart(userId)) {
+                    is Result.Success -> {
+                        // Carrito vaciado exitosamente
+                    }
+                    is Result.Error -> {
+                        // Error al vaciar pero continuamos
+                    }
+                }
 
-                // 5. Mostrar confirmación
+                // 5. Finalizar procesamiento y mostrar confirmación
                 isProcessingPayment = false
                 hideCheckoutDialog()
+
+                // Pequeño delay para asegurar que el diálogo de confirmación se cierre
+                kotlinx.coroutines.delay(200)
+
+                // Mostrar diálogo de éxito
                 showPaymentSuccessDialog = true
 
             } catch (e: Exception) {
                 isProcessingPayment = false
+                hideCheckoutDialog()
                 showMessage("Error al procesar pago: ${e.message}")
             }
         }

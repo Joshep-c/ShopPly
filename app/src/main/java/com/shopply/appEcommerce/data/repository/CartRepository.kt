@@ -5,6 +5,7 @@ import com.shopply.appEcommerce.data.local.dao.ProductDao
 import com.shopply.appEcommerce.data.local.entities.CartItem
 import com.shopply.appEcommerce.domain.model.Result
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -130,12 +131,13 @@ class CartRepository @Inject constructor(
     }
 
     // VALIDACIONES
-    // Verificar si todos los items del carrito tienen stock disponible
-
+    /**
+     * Verificar si todos los items del carrito tienen stock disponible
+     */
     suspend fun validateCartStock(userId: Long): Result<List<String>> {
         return try {
-            val items = mutableListOf<CartItem>()
-            cartDao.getCartItems(userId).collect { items.addAll(it) }
+            // Obtener items del carrito (primera emisión del Flow)
+            val items = cartDao.getCartItems(userId).first()
 
             val unavailableItems = mutableListOf<String>()
 
