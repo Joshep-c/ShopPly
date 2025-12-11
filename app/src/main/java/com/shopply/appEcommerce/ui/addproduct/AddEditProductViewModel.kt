@@ -1,5 +1,6 @@
 package com.shopply.appEcommerce.ui.addproduct
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,7 @@ import com.shopply.appEcommerce.data.repository.CategoryRepository
 import com.shopply.appEcommerce.data.repository.ProductRepository
 import com.shopply.appEcommerce.data.repository.StoreRepository
 import com.shopply.appEcommerce.data.repository.UserRepository
+import com.shopply.appEcommerce.data.storage.LocalStorageService
 import com.shopply.appEcommerce.domain.model.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,7 @@ import javax.inject.Inject
 class AddEditProductViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val categoryRepository: CategoryRepository,
+    private val localStorageService: LocalStorageService,
     private val storeRepository: StoreRepository,
     private val userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
@@ -65,6 +68,13 @@ class AddEditProductViewModel @Inject constructor(
         private set
 
     var isActive by mutableStateOf(true)
+        private set
+
+    // Modo de imagen: URL manual o Galería
+    var useManualUrl by mutableStateOf(false)
+        private set
+
+    var isSavingImage by mutableStateOf(false)
         private set
 
     var isSaving by mutableStateOf(false)
@@ -174,6 +184,41 @@ class AddEditProductViewModel @Inject constructor(
     fun updateIsActive(active: Boolean) {
         isActive = active
     }
+
+    fun toggleImageInputMode() {
+        useManualUrl = !useManualUrl
+        if (!useManualUrl) {
+            // Si cambia a galería, limpiar URL manual
+            imageUrl = ""
+        }
+    }
+
+    /**
+     * Guardar imagen desde galería
+     */
+    fun saveImageFromGallery(uri: Uri) {
+        viewModelScope.launch {
+            try {
+                isSavingImage = true
+
+                // Guardar imagen en almacenamiento local
+                val result = localStorageService.saveProductImage(uri)
+
+                if (result.isSuccess) {
+                    imageUrl = result.getOrNull() ?: ""
+                    showMessage("Imagen guardada correctamente")
+                } else {
+                    showMessage("Error al guardar imagen: ${result.exceptionOrNull()?.message}")
+                }
+
+                isSavingImage = false
+            } catch (e: Exception) {
+                isSavingImage = false
+                showMessage("Error: ${e.message}")
+            }
+        }
+    }
+
 
     /**
      * Validar formulario
