@@ -1,6 +1,7 @@
 package com.shopply.appEcommerce.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -79,14 +80,9 @@ fun getBottomNavItems(userRole: UserRole): List<BottomNavItem> {
                     route = Screen.Home.route
                 ),
                 BottomNavItem(
-                    title = "Favoritos",
-                    icon = Icons.Default.Favorite,
-                    route = Screen.Favorites.route
-                ),
-                BottomNavItem(
-                    title = "Carrito",
-                    icon = Icons.Default.ShoppingCart,
-                    route = Screen.Cart.route
+                    title = "Categorías",
+                    icon = Icons.Default.Category,
+                    route = Screen.AdminCategories.route
                 ),
                 BottomNavItem(
                     title = "Tiendas",

@@ -18,6 +18,7 @@ sealed class Screen(val route: String) {
 
     // Rutas de administrador
     data object AdminStores : Screen("admin_stores")
+    data object AdminCategories : Screen("admin_categories")
 
     // Rutas con argumentos
     data object ProductDetail : Screen("product/{productId}") {
