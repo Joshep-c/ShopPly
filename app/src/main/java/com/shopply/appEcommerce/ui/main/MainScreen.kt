@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.shopply.appEcommerce.data.local.entities.UserRole
 import com.shopply.appEcommerce.data.repository.UserRepository
+import com.shopply.appEcommerce.ui.admin.AdminCategoriesScreen
 import com.shopply.appEcommerce.ui.admin.AdminStoresScreen
 import com.shopply.appEcommerce.ui.addproduct.AddEditProductScreen
 import com.shopply.appEcommerce.ui.cart.CartScreen
@@ -190,6 +191,10 @@ fun MainNavHost(
 
         // Pantalla de Admin (solo para administradores)
         if (userRole == UserRole.ADMIN) {
+            composable(Screen.AdminCategories.route) {
+                AdminCategoriesScreen()
+            }
+
             composable(Screen.AdminStores.route) {
                 AdminStoresScreen()
             }
