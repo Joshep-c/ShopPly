@@ -21,6 +21,12 @@ data class Category(
     val name: String,
     val description: String? = null,
 
+    // URL de la imagen de la categoría (puede ser local o remota)
+    val imageUrl: String? = null,
+
+    // Recurso drawable local (opcional). Usar este campo cuando la imagen esté en res/drawable
+    val imageResId: Int? = null,
+
     // Control de visualización
     val isActive: Boolean = true,
     val displayOrder: Int = 0, // Orden de aparición en la UI
