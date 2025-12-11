@@ -17,16 +17,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -42,8 +40,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -56,7 +56,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shopply.appEcommerce.R
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * HomeScreen - Pantalla principal de la aplicación
@@ -75,6 +76,9 @@ fun HomeScreen(
     onProductClick: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Estado del LazyColumn para hacer scroll programático
+    val listState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -169,9 +173,11 @@ fun HomeScreen(
                     modifier = Modifier.padding(paddingValues),
                     user = state.user,
                     categories = state.categories,
+                    allProducts = state.allProducts,
                     recommendedProducts = state.recommendedProducts,
                     specialOffers = state.specialOffers,
-                    onProductClick = onProductClick
+                    onProductClick = onProductClick,
+                    listState = listState
                 )
             }
             is HomeUiState.Error -> {
@@ -205,27 +211,47 @@ private fun HomeContent(
     modifier: Modifier = Modifier,
     user: com.shopply.appEcommerce.data.local.entities.User,
     categories: List<com.shopply.appEcommerce.data.local.entities.Category>,
+    allProducts: List<com.shopply.appEcommerce.data.local.entities.Product>,
     recommendedProducts: List<com.shopply.appEcommerce.data.local.entities.Product>,
     specialOffers: List<com.shopply.appEcommerce.data.local.entities.Product>,
-    onProductClick: (Long) -> Unit = {}
+    onProductClick: (Long) -> Unit = {},
+    listState: LazyListState
 ) {
+    // Crear scope para animar el scroll
+    val coroutineScope = rememberCoroutineScope()
+
+    // Construir el orden de items: Greeting(0), Banners(1), Categories(2), then one item por categoría
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = 16.dp),
+        state = listState
     ) {
         // Saludo personalizado
-        item {
-            GreetingSection(userName = user.name)
-        }
+        item { GreetingSection(userName = user.name) }
 
         // Banners promocionales
+        item { PromotionalBanners() }
+
+        // Grid de categorías (toda la lista)
         item {
-            PromotionalBanners()
+            CategoriesSection(categories = categories, onCategoryClick = { categoryId ->
+                // calcular índice objetivo: 3 + indexOfCategory
+                val index = 3 + categories.indexOfFirst { it.id == categoryId }
+                coroutineScope.launch {
+                    listState.animateScrollToItem(index)
+                }
+            })
         }
 
-        // Categorías reales de la BD
-        item {
-            CategoriesSection(categories = categories)
+        // Secciones por categoría: para cada categoría, mostrar productos filtrados
+        categories.forEach { category ->
+            item {
+                CategoryProductsSection(
+                    category = category,
+                    products = allProducts.filter { it.categoryId == category.id },
+                    onProductClick = onProductClick
+                )
+            }
         }
 
         // Productos recomendados reales
@@ -258,18 +284,19 @@ private fun GreetingSection(userName: String) {
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
-                        )
+        // Caja con gradiente horizontal como fondo
+        val boxModifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
                     )
                 )
-        ) {
+            )
+
+        Box(modifier = boxModifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -297,21 +324,27 @@ private fun GreetingSection(userName: String) {
                         tint = Color.White
                     )
                 }
+
                 Spacer(modifier = Modifier.width(16.dp))
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Hola de nuevo,",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     )
+
                     Spacer(modifier = Modifier.height(2.dp))
+
                     Text(
                         text = userName,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
+
                     Spacer(modifier = Modifier.height(4.dp))
+
                     Text(
                         text = "¿Qué quieres comprar hoy?",
                         style = MaterialTheme.typography.bodyMedium,
@@ -437,68 +470,115 @@ private fun PromotionalBanner(index: Int) {
 }
 
 @Composable
-private fun CategoriesSection(categories: List<com.shopply.appEcommerce.data.local.entities.Category>) {
+private fun CategoriesSection(
+    categories: List<com.shopply.appEcommerce.data.local.entities.Category>,
+    onCategoryClick: (Long) -> Unit = {}
+) {
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
-        Text(
-            text = "Categorías",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            items(categories) { category ->
-                CategoryItem(category = category)
+            Column {
+                Text(
+                    text = "Categorías",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Explora por categoría",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Mostrar todas las categorías en filas de 2 columnas (más seguro dentro de LazyColumn)
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+            val rows = categories.chunked(2)
+            for (rowCategories in rows) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    for (i in 0 until 2) {
+                        val cat = rowCategories.getOrNull(i)
+                        if (cat != null) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                CategoryGridItem(category = cat, onClick = { onCategoryClick(cat.id) })
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun CategoryItem(category: com.shopply.appEcommerce.data.local.entities.Category) {
-    // Iconos según el nombre de la categoría
-    val icon = when {
-        category.name.contains("Electrónica", ignoreCase = true) -> Icons.Default.Phone
-        category.name.contains("Ropa", ignoreCase = true) ||
-        category.name.contains("Moda", ignoreCase = true) -> Icons.Default.ShoppingBag
-        category.name.contains("Hogar", ignoreCase = true) -> Icons.Default.Home
-        category.name.contains("Deporte", ignoreCase = true) -> Icons.Default.Star
-        category.name.contains("Artesanía", ignoreCase = true) -> Icons.Default.Favorite
-        else -> Icons.Default.ShoppingBag
-    }
+private fun CategoryGridItem(
+    category: com.shopply.appEcommerce.data.local.entities.Category,
+    onClick: () -> Unit = {}
+) {
+    // Priorizar imageResId si está disponible (evita reflexión en runtime)
+    val imageModel: Any? = category.imageResId ?: category.imageUrl ?: R.drawable.icon
 
     Card(
         modifier = Modifier
-            .width(100.dp)
-            .clickable { /* TODO: Navigate to category */ },
+            .height(160.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = icon,
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Usar AsyncImage: soporta model Int (drawable) o String (URL)
+            AsyncImage(
+                model = imageModel,
                 contentDescription = category.name,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.icon),
+                error = painterResource(id = R.drawable.icon)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = category.name,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+
+            // Overlay sutil para mejorar legibilidad del texto
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.25f))
+                        )
+                    )
             )
+
+            // Texto de la categoría en la parte inferior
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = category.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
@@ -658,14 +738,14 @@ private fun ProductCard(
                 if (isOffer) {
                     Column {
                         Text(
-                            text = "S/ ${String.format("%.2f", product.price)}",
+                            text = "S/ ${"%.2f".format(product.price)}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "S/ ${String.format("%.2f", product.price * 0.85)}",
+                            text = "S/ ${"%.2f".format(product.price * 0.85)}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -673,7 +753,7 @@ private fun ProductCard(
                     }
                 } else {
                     Text(
-                        text = "S/ ${String.format("%.2f", product.price)}",
+                        text = "S/ ${"%.2f".format(product.price)}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -710,3 +790,41 @@ private fun ProductCard(
     }
 }
 
+@Composable
+private fun CategoryProductsSection(
+    category: com.shopply.appEcommerce.data.local.entities.Category,
+    products: List<com.shopply.appEcommerce.data.local.entities.Product>,
+    onProductClick: (Long) -> Unit = {}
+) {
+    Column(modifier = Modifier.padding(vertical = 12.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = category.name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            TextButton(onClick = { /* TODO: See all in category */ }) {
+                Text("Ver todo")
+            }
+        }
+
+        if (products.isEmpty()) {
+            Box(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
+                Text("No hay productos en esta categoría", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            return
+        }
+
+        LazyRow(contentPadding = PaddingValues(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(products) { product ->
+                ProductCard(product = product, isOffer = false, onClick = { onProductClick(product.id) })
+            }
+        }
+    }
+}

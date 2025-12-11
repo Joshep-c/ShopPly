@@ -6,6 +6,7 @@ import com.shopply.appEcommerce.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.shopply.appEcommerce.R
 
 /**
  * CategoryRepository - Repositorio de categorías
@@ -105,41 +106,57 @@ class CategoryRepository @Inject constructor(
             Category(
                 name = "Electrónica",
                 description = "Productos electrónicos y tecnología",
+                imageUrl = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 1
             ),
             Category(
                 name = "Moda y Ropa",
                 description = "Ropa, calzado y accesorios",
+                imageUrl = "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 2
             ),
             Category(
                 name = "Hogar y Cocina",
                 description = "Artículos para el hogar",
+                imageUrl = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=400&fit=crop",
+                imageResId = R.drawable.banner,
                 displayOrder = 3
             ),
             Category(
                 name = "Alimentos",
                 description = "Productos alimenticios y bebidas",
+                imageUrl = "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 4
             ),
             Category(
                 name = "Artesanía",
                 description = "Productos artesanales peruanos",
+                imageUrl = "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 5
             ),
             Category(
                 name = "Salud y Belleza",
                 description = "Cuidado personal y cosméticos",
+                imageUrl = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 6
             ),
             Category(
                 name = "Deportes",
                 description = "Artículos deportivos y outdoor",
+                imageUrl = "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 7
             ),
             Category(
                 name = "Libros",
                 description = "Libros y material educativo",
+                imageUrl = "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400&h=400&fit=crop",
+                imageResId = R.drawable.icon,
                 displayOrder = 8
             )
         )

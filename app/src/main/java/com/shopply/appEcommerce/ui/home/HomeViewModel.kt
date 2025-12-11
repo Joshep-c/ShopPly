@@ -52,6 +52,7 @@ class HomeViewModel @Inject constructor(
                         _uiState.value = HomeUiState.Success(
                             user = user,
                             categories = activeCategories,
+                            allProducts = products,
                             recommendedProducts = recommendedProducts,
                             specialOffers = specialOffers
                         )
@@ -77,9 +78,9 @@ sealed class HomeUiState {
     data class Success(
         val user: User,
         val categories: List<Category>,
+        val allProducts: List<Product>,
         val recommendedProducts: List<Product>,
         val specialOffers: List<Product>
     ) : HomeUiState()
     data class Error(val message: String) : HomeUiState()
 }
-

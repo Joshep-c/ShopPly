@@ -40,6 +40,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
         )
+            .addMigrations(AppDatabase.MIGRATION_3_4) // Migración para imageUrl en categories
             .fallbackToDestructiveMigration() // Solo para desarrollo/prototipo
             .build()
     }
