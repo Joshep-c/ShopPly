@@ -1,10 +1,48 @@
 # 📱 ShopPly - Sistema de Autenticación y Navegación
 
+Repository
+
+- GitHub: https://github.com/Joshep-c/ShopPly
+
+Clone
+
+```powershell
+# Clona el repositorio (Windows PowerShell)
+git clone https://github.com/Joshep-c/ShopPly.git
+``` 
+
 ## 📋 Resumen de Implementación
 
 Este documento describe la arquitectura completa del sistema de autenticación, navegación y estructura de pantallas de la aplicación **ShopPly**, un e-commerce tipo "Mini Amazon para PYMEs peruanas".
 
 ---
+
+## 🔖 READMEs por módulo
+
+Esta repo contiene README por módulo y submódulo para facilitar la navegación y la incorporación de colaboradores. Los README principales que encontrarás en esta rama son:
+
+- `app/README.md` — Vista general del módulo Android y cómo compilar la app.
+- `data/README.md` — Descripción del módulo de datos (repositorios, Room, DataStore).
+- `core/README.md` — Utilidades y librerías compartidas.
+- `domain/README.md` — Entidades y casos de uso de negocio.
+- `feature-catalog/README.md` — Features independientes (si aplica).
+- `app/src/main/java/.../di/README.md` — Módulos y proveedores de Hilt.
+- `app/src/main/java/.../data/README.md` — Repositorios, DAOs, base de datos y migraciones.
+- `app/src/main/java/.../ui/README.md` — Arquitectura de UI: NavGraph, pantallas y patrones (MVVM/StateFlow).
+
+Cada README incluye: propósito, contratos públicos (entradas/salidas), cómo ejecutar tareas locales y enlaces a piezas relevantes (migrations, pruebas, ejemplos).
+
+## 📚 Docs auxiliares
+
+Además de los README por módulo, hay documentación auxiliar técnica útil para desarrolladores:
+
+- `docs/DB-MIGRATIONS.md` — instrucciones y ejemplos para gestionar migraciones de Room.
+- `docs/DATASEEDER.md` — cómo funciona el `DataSeeder`, métodos y cuándo usarlo.
+- `docs/LOCAL_STORAGE.md` — detalles del `LocalStorageService` (guardar/eliminar imágenes, URIs, notas).
+- `docs/METHODS.md` — resumen rápido de métodos clave en repositorios, DAOs y ViewModels.
+
+Estos documentos ayudan a entender operaciones comunes sin explorar todo el código base inicialmente.
+
 
 ## 🏗️ Arquitectura General
 
