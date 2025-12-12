@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
@@ -33,6 +35,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -105,30 +108,35 @@ fun StoreScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mis Productos") },
+                title = { Text("Mi Tienda") },
                 actions = {
-                    // Botón de búsqueda
-                    IconButton(onClick = { showSearchBar = !showSearchBar }) {
-                        Icon(
-                            imageVector = if (showSearchBar) Icons.Default.Close else Icons.Default.Search,
-                            contentDescription = if (showSearchBar) "Cerrar búsqueda" else "Buscar"
-                        )
+                    // Botón de búsqueda (solo si la tienda está aprobada)
+                    if (uiState is StoreUiState.Success) {
+                        IconButton(onClick = { showSearchBar = !showSearchBar }) {
+                            Icon(
+                                imageVector = if (showSearchBar) Icons.Default.Close else Icons.Default.Search,
+                                contentDescription = if (showSearchBar) "Cerrar búsqueda" else "Buscar"
+                            )
+                        }
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddProductClick,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(64.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Agregar producto",
-                    modifier = Modifier.size(28.dp)
-                )
+            // Solo mostrar FAB si la tienda está aprobada
+            if (uiState is StoreUiState.Success) {
+                FloatingActionButton(
+                    onClick = onAddProductClick,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(64.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Agregar producto",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -200,6 +208,27 @@ fun StoreScreen(
                     onPauseProduct = { viewModel.toggleProductStatus(it) },
                     onDuplicateProduct = { viewModel.duplicateProduct(it) },
                     onDeleteProduct = { showDeleteDialog = it }
+                )
+            }
+
+            is StoreUiState.StorePending -> {
+                StorePendingContent(
+                    modifier = modifier.padding(paddingValues),
+                    storeName = state.store.name
+                )
+            }
+
+            is StoreUiState.StoreRejected -> {
+                StoreRejectedContent(
+                    modifier = modifier.padding(paddingValues),
+                    storeName = state.store.name,
+                    reason = state.reason
+                )
+            }
+
+            is StoreUiState.NoStore -> {
+                NoStoreContent(
+                    modifier = modifier.padding(paddingValues)
                 )
             }
         }
@@ -825,4 +854,217 @@ private fun EmptyProductsState(
     }
 }
 
+/**
+ * Contenido cuando la tienda está pendiente de aprobación
+ */
+@Composable
+private fun StorePendingContent(
+    modifier: Modifier = Modifier,
+    storeName: String
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Icono de reloj/espera
+                Icon(
+                    imageVector = Icons.Default.HourglassEmpty,
+                    contentDescription = null,
+                    modifier = Modifier.size(80.dp),
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
 
+                Text(
+                    text = "Tienda Pendiente",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+
+                Text(
+                    text = "\"$storeName\"",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
+                )
+
+                Text(
+                    text = "Tu tienda está siendo revisada por nuestro equipo de administración. " +
+                            "Este proceso puede tomar entre 24 a 48 horas.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center
+                )
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Mientras tanto puedes:",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text("• Preparar las fotos de tus productos", style = MaterialTheme.typography.bodySmall)
+                        Text("• Escribir las descripciones", style = MaterialTheme.typography.bodySmall)
+                        Text("• Definir tus precios y stock", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+
+                Text(
+                    text = "Te notificaremos cuando tu tienda sea aprobada",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.6f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Contenido cuando la tienda fue rechazada
+ */
+@Composable
+private fun StoreRejectedContent(
+    modifier: Modifier = Modifier,
+    storeName: String,
+    reason: String
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Icono de bloqueo
+                Icon(
+                    imageVector = Icons.Default.Block,
+                    contentDescription = null,
+                    modifier = Modifier.size(80.dp),
+                    tint = MaterialTheme.colorScheme.error
+                )
+
+                Text(
+                    text = "Tienda Rechazada",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onErrorContainer
+                )
+
+                Text(
+                    text = "\"$storeName\"",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f)
+                )
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Razón del rechazo:",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = reason,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Si crees que fue un error, contacta a soporte para más información.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.6f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Contenido cuando el usuario no tiene tienda
+ */
+@Composable
+private fun NoStoreContent(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Storefront,
+                    contentDescription = null,
+                    modifier = Modifier.size(80.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = "No tienes una tienda",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = "Parece que tu cuenta no tiene una tienda asociada. " +
+                            "Si eres vendedor, por favor contacta a soporte.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}

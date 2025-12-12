@@ -3,6 +3,8 @@ package com.shopply.appEcommerce.ui.store
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shopply.appEcommerce.data.local.entities.Product
+import com.shopply.appEcommerce.data.local.entities.Store
+import com.shopply.appEcommerce.data.local.entities.StoreStatus
 import com.shopply.appEcommerce.data.repository.ProductRepository
 import com.shopply.appEcommerce.data.repository.StoreRepository
 import com.shopply.appEcommerce.data.repository.UserRepository
@@ -53,6 +55,7 @@ class StoreViewModel @Inject constructor(
 
     /**
      * Carga los productos de la tienda del vendedor actual
+     * Verifica primero que la tienda esté aprobada
      */
     fun loadProducts() {
         viewModelScope.launch {
@@ -71,11 +74,29 @@ class StoreViewModel @Inject constructor(
                 val store = storeRepository.getStoreByOwnerId(currentUser.id).first()
 
                 if (store == null) {
-                    _uiState.value = StoreUiState.Error("No tienes una tienda asociada")
+                    _uiState.value = StoreUiState.NoStore
                     return@launch
                 }
 
-                // Cargar productos de la tienda
+                // Verificar estado de la tienda
+                when (store.status) {
+                    StoreStatus.PENDING -> {
+                        _uiState.value = StoreUiState.StorePending(store)
+                        return@launch
+                    }
+                    StoreStatus.REJECTED -> {
+                        _uiState.value = StoreUiState.StoreRejected(
+                            store = store,
+                            reason = store.rejectionReason ?: "Sin razón especificada"
+                        )
+                        return@launch
+                    }
+                    StoreStatus.APPROVED -> {
+                        // Continuar con la carga de productos
+                    }
+                }
+
+                // Cargar productos de la tienda (solo si está aprobada)
                 productRepository.getProductsByStore(store.id).collect { productList ->
                     _products.value = productList
                     calculateStats(productList)
@@ -219,10 +240,26 @@ class StoreViewModel @Inject constructor(
  */
 sealed class StoreUiState {
     object Loading : StoreUiState()
+
+    /** Tienda aprobada - puede ver y gestionar productos */
     data class Success(
         val products: List<Product>,
         val stats: ProductStats
     ) : StoreUiState()
+
+    /** Tienda pendiente de aprobación por el admin */
+    data class StorePending(val store: Store) : StoreUiState()
+
+    /** Tienda rechazada por el admin */
+    data class StoreRejected(
+        val store: Store,
+        val reason: String
+    ) : StoreUiState()
+
+    /** El usuario no tiene tienda asociada */
+    object NoStore : StoreUiState()
+
+    /** Error genérico */
     data class Error(val message: String) : StoreUiState()
 }
 

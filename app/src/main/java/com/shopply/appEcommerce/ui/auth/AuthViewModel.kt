@@ -5,7 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shopply.appEcommerce.data.local.entities.Store
+import com.shopply.appEcommerce.data.local.entities.StoreStatus
 import com.shopply.appEcommerce.data.local.entities.UserRole
+import com.shopply.appEcommerce.data.repository.StoreRepository
 import com.shopply.appEcommerce.data.repository.UserRepository
 import com.shopply.appEcommerce.domain.model.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +24,13 @@ import javax.inject.Inject
  * Gestiona:
  * - Login de usuarios
  * - Registro de usuarios (Comprador, Vendedor)
+ * - Creación automática de tienda para vendedores
  * - Estados de autenticación
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val storeRepository: StoreRepository
 ) : ViewModel() {
 
     // Estado de autenticación
@@ -46,6 +51,11 @@ class AuthViewModel @Inject constructor(
     var registerName by mutableStateOf("")
     var registerPhone by mutableStateOf("")
     var registerConfirmPassword by mutableStateOf("")
+
+    // Campos adicionales para vendedores (tienda)
+    var storeName by mutableStateOf("")
+    var storeRuc by mutableStateOf("")
+    var storeDescription by mutableStateOf("")
 
     // Tipo de cuenta a registrar
     var isBusinessAccount by mutableStateOf(false)
@@ -104,6 +114,7 @@ class AuthViewModel @Inject constructor(
 
     /**
      * Registrar nuevo usuario
+     * Si es vendedor, también crea la tienda automáticamente en estado PENDING
      */
     fun register() {
         if (!validateRegisterInput()) return
@@ -122,11 +133,44 @@ class AuthViewModel @Inject constructor(
                 userRole = userRole
             )) {
                 is Result.Success -> {
-                    isLoggedIn = true
-                    val accountType = if (isBusinessAccount) "vendedor" else "comprador"
-                    _uiState.value = AuthUiState.Success(
-                        "¡Cuenta de $accountType creada exitosamente!"
-                    )
+                    val user = result.data
+
+                    // Si es vendedor, crear la tienda automáticamente
+                    if (isBusinessAccount) {
+                        val storeResult = storeRepository.createStore(
+                            Store(
+                                ownerId = user.id,
+                                name = storeName.trim(),
+                                description = storeDescription.trim().ifBlank {
+                                    "Tienda de ${user.name}"
+                                },
+                                ruc = storeRuc.trim(),
+                                phone = registerPhone.trim().ifBlank { "000000000" },
+                                status = StoreStatus.PENDING
+                            )
+                        )
+
+                        when (storeResult) {
+                            is Result.Success -> {
+                                isLoggedIn = true
+                                _uiState.value = AuthUiState.Success(
+                                    "¡Cuenta de vendedor creada! Tu tienda está pendiente de aprobación por el administrador."
+                                )
+                            }
+                            is Result.Error -> {
+                                // Usuario creado pero falló la tienda
+                                isLoggedIn = true
+                                _uiState.value = AuthUiState.Success(
+                                    "Cuenta creada, pero hubo un error con la tienda: ${storeResult.exception.message}"
+                                )
+                            }
+                        }
+                    } else {
+                        isLoggedIn = true
+                        _uiState.value = AuthUiState.Success(
+                            "¡Cuenta de comprador creada exitosamente!"
+                        )
+                    }
                 }
                 is Result.Error -> {
                     _uiState.value = AuthUiState.Error(
@@ -164,6 +208,19 @@ class AuthViewModel @Inject constructor(
             }
             registerPassword != registerConfirmPassword -> {
                 _uiState.value = AuthUiState.Error("Las contraseñas no coinciden")
+                return false
+            }
+            // Validaciones adicionales para vendedores
+            isBusinessAccount && storeName.isBlank() -> {
+                _uiState.value = AuthUiState.Error("Ingresa el nombre de tu tienda")
+                return false
+            }
+            isBusinessAccount && storeRuc.isBlank() -> {
+                _uiState.value = AuthUiState.Error("Ingresa el RUC de tu negocio")
+                return false
+            }
+            isBusinessAccount && (storeRuc.length != 11 || !storeRuc.all { it.isDigit() }) -> {
+                _uiState.value = AuthUiState.Error("El RUC debe tener 11 dígitos numéricos")
                 return false
             }
         }
@@ -204,6 +261,10 @@ class AuthViewModel @Inject constructor(
         registerPhone = ""
         registerConfirmPassword = ""
         isBusinessAccount = false
+        // Campos de tienda
+        storeName = ""
+        storeRuc = ""
+        storeDescription = ""
     }
 
     /**
@@ -242,6 +303,24 @@ class AuthViewModel @Inject constructor(
 
     fun toggleBusinessAccount() {
         isBusinessAccount = !isBusinessAccount
+    }
+
+    /**
+     * Actualizar campos de tienda (solo vendedores)
+     */
+    fun updateStoreName(value: String) {
+        storeName = value
+    }
+
+    fun updateStoreRuc(value: String) {
+        // Solo permitir números y máximo 11 dígitos
+        if (value.length <= 11 && value.all { it.isDigit() }) {
+            storeRuc = value
+        }
+    }
+
+    fun updateStoreDescription(value: String) {
+        storeDescription = value
     }
 }
 

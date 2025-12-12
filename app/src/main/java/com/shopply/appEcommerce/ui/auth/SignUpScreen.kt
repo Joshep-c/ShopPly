@@ -10,12 +10,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -172,8 +177,87 @@ fun SignUpScreen(
             placeholder = { Text("987654321") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            enabled = uiState !is AuthUiState.Loading
+            enabled = uiState !is AuthUiState.Loading,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
+
+        // Campos adicionales para vendedores (tienda)
+        AnimatedVisibility(visible = viewModel.isBusinessAccount) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                // Separador con título
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "📦 Información de tu Tienda",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                        Text(
+                            text = "Tu tienda quedará pendiente de aprobación",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+
+                // Nombre de la tienda
+                OutlinedTextField(
+                    value = viewModel.storeName,
+                    onValueChange = viewModel::updateStoreName,
+                    label = { Text("Nombre de la Tienda*") },
+                    placeholder = { Text("Mi Tienda PYME") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    enabled = uiState !is AuthUiState.Loading,
+                    leadingIcon = {
+                        Icon(Icons.Default.Store, contentDescription = null)
+                    },
+                    isError = uiState is AuthUiState.Error && viewModel.storeName.isBlank()
+                )
+
+                // RUC
+                OutlinedTextField(
+                    value = viewModel.storeRuc,
+                    onValueChange = viewModel::updateStoreRuc,
+                    label = { Text("RUC (11 dígitos)*") },
+                    placeholder = { Text("20123456789") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    enabled = uiState !is AuthUiState.Loading,
+                    leadingIcon = {
+                        Icon(Icons.Default.Numbers, contentDescription = null)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    supportingText = {
+                        Text("${viewModel.storeRuc.length}/11 dígitos")
+                    },
+                    isError = uiState is AuthUiState.Error &&
+                        (viewModel.storeRuc.length != 11 || !viewModel.storeRuc.all { it.isDigit() })
+                )
+
+                // Descripción de la tienda (opcional)
+                OutlinedTextField(
+                    value = viewModel.storeDescription,
+                    onValueChange = viewModel::updateStoreDescription,
+                    label = { Text("Descripción de la tienda (opcional)") },
+                    placeholder = { Text("¿Qué vendes? ¿Qué hace especial a tu negocio?") },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 3,
+                    enabled = uiState !is AuthUiState.Loading,
+                    leadingIcon = {
+                        Icon(Icons.Default.Description, contentDescription = null)
+                    }
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
